@@ -21,7 +21,7 @@ public class FilePathTests
     }
 
     [Fact]
-    public void FilePath_SupportFilePaths(){
+    public void FilePath_FullNames(){
         var dir = tempDir;
         var fileName = "Some.File.txt";
         var lockName = "Some.File.txt.lck";
