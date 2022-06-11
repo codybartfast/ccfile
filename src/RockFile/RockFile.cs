@@ -2,6 +2,7 @@
 namespace Fmbm.IO;
 
 using System.Collections.Concurrent;
+
 public class RockFile
 {
     const string LockSuffix = ".lck";
@@ -30,6 +31,20 @@ public class RockFile
             _ => new Object());
     }
 
+    public void WriteBytes(byte[] bytes)
+    {
+        lock (fileLock)
+        {
+            CheckFiles();
+            File.WriteAllBytes(TempPath, bytes);
+            if (File.Exists(FilePath))
+            {
+                File.Move(FilePath, BackupPath, true);
+            }
+            File.Move(TempPath, FilePath);
+        }
+    }
+
     public void CheckFiles()
     {
         lock (fileLock)
@@ -44,7 +59,7 @@ public class RockFile
                 throw new TempFileAlreadyExistsException(
                     $"Temporay file {TempPath} already exists.");
             }
-            if (File.Exists(BackupPath) && ! File.Exists(FilePath))
+            if (File.Exists(BackupPath) && !File.Exists(FilePath))
             {
                 throw new BackupExistsWithoutMainException(
                     $"Backup file exists but could not find main file {FilePath}");
