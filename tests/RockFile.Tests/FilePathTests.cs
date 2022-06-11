@@ -2,7 +2,7 @@ namespace Fmbm.IO.Tests;
 
 public class FilePathTests
 {
-    string tempDir = DirPaths.GetDir("FilePath_Test").CheckedPath;
+    string tempDir = DirPaths.GetDir("FilePathTests").CheckedPath;
 
     [Fact]
     public void FilePath_NotRelative()
@@ -36,7 +36,7 @@ public class FilePathTests
         Assert.Equal(dir, new FileInfo(rock.BackupPath).Directory?.FullName);
         Assert.Equal(backupName, new FileInfo(rock.BackupPath).Name);
 
-        Assert.Equal(dir, new FileInfo(rock.NewPath).Directory?.FullName);
-        Assert.Equal(newName, new FileInfo(rock.NewPath).Name);
+        Assert.Equal(dir, new FileInfo(rock.TempPath).Directory?.FullName);
+        Assert.Equal(newName, new FileInfo(rock.TempPath).Name);
     }
 }
