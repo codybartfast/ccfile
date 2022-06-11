@@ -1,8 +1,15 @@
 ﻿using Fmbm.IO;
-using Fmbm.Paths;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine(
+    "File persistence with the performance and flexibility of a rock!");
 
-var a = "apple".ToUpper();
-var b = "apple".ToUpper();
-Console.WriteLine(Object.ReferenceEquals(a, a));
+var obj = new object();
+
+lock (obj)
+{
+    Console.WriteLine("1");
+    lock (obj)
+    {
+        Console.WriteLine("2");
+    }
+}
