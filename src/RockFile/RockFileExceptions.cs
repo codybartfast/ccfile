@@ -22,3 +22,9 @@ public class BackupExistsWithoutMainException : RockFileException
     public BackupExistsWithoutMainException(string message)
     : base(message) { }
 }
+
+// public class ModifyNullObjectException : RockFileException
+// {
+//     public ModifyNullObjectException(string message)
+//     : base(message) { }
+// }
