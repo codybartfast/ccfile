@@ -2,7 +2,7 @@
 
 Console.WriteLine("Hello, World!");
 
-var rock =
+IRockFile rock =
     new RockFile(Path.Combine(DirPaths.AppRoot.CheckedPath, "AFile.txt"));
 
 var obj = new Derry();
@@ -21,4 +21,5 @@ class Derry
 {
     public string Erin { get; set; } = "Quinn";
     public string Orla { get; } = "McCool";
+
 }

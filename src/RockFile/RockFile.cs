@@ -6,18 +6,21 @@ using System.Text;
 using System.Text.Json;
 using Serializer = System.Text.Json.JsonSerializer;
 
-public class RockFile
+public delegate void RockFileArchive(string filePath, string? backupPath);
+
+public class RockFile :
+    IRockFile, IRockBinaryFile, IRockTextFile, IRockObjectFile
 {
     const string LockSuffix = ".lck";
     const string BackupSuffix = ".bak";
-    const string NewSuffix = ".tmp";
+    const string TempSuffix = ".tmp";
 
     static readonly Encoding encoding = Encoding.UTF8;
 
     static readonly ConcurrentDictionary<string, object> fileLockDict =
         new ConcurrentDictionary<string, object>();
-    static readonly JsonSerializerOptions serializerOptions = 
-        new JsonSerializerOptions { WriteIndented = true };
+    static readonly JsonSerializerOptions serializerOptions =
+        new JsonSerializerOptions { WriteIndented = true, };
 
     public static TObject? BytesToObject<TObject>(byte[] bytes)
     {
@@ -49,6 +52,8 @@ public class RockFile
         return encoding.GetBytes(text);
     }
 
+    static void NullTee(string _, string? _1) { }
+
     private readonly object fileLock;
 
     public string FilePath { get; }
@@ -56,23 +61,37 @@ public class RockFile
     internal string BackupPath { get; }
     internal string TempPath { get; }
 
-    public RockFile(string filePath)
+    readonly RockFileArchive archive;
+
+    public RockFile(string filePath, RockFileArchive? archive = null)
     {
         FilePath = new FileInfo(filePath).FullName;
         LockPath = FilePath + LockSuffix;
         BackupPath = filePath + BackupSuffix;
-        TempPath = filePath + NewSuffix;
+        TempPath = filePath + TempSuffix;
 
         fileLock = fileLockDict.GetOrAdd(
             FilePath.ToUpperInvariant(),
             _ => new Object());
+
+        this.archive = archive ?? ((_, _1) => { });
     }
 
     public void ModifyObject<TObject>(Func<TObject?, TObject> modify)
     {
         lock (fileLock)
         {
-            WriteObject<TObject>(modify(ReadObject<TObject>()));
+            var existing = ReadObject<TObject>();
+            TObject? modified = default;
+            try
+            {
+                modified = modify(existing);
+            }
+            catch (Exception modifyEx)
+            {
+                throw new RockFileModifyException(modifyEx);
+            }
+            WriteObject<TObject>(modified);
         }
     }
 
@@ -90,7 +109,17 @@ public class RockFile
     {
         lock (fileLock)
         {
-            WriteText(modify(ReadText()));
+            var existing = ReadText();
+            string? modified = null;
+            try
+            {
+                modified = modify(existing);
+            }
+            catch (Exception modifyEx)
+            {
+                throw new RockFileModifyException(modifyEx);
+            }
+            WriteText(modified);
         }
     }
 
@@ -108,7 +137,17 @@ public class RockFile
     {
         lock (fileLock)
         {
-            WriteBytes(modify(ReadBytes()));
+            var existing = ReadBytes();
+            byte[]? modified = null;
+            try
+            {
+                modified = modify(existing);
+            }
+            catch (Exception modifyEx)
+            {
+                throw new RockFileModifyException(modifyEx);
+            }
+            WriteBytes(modified);
         }
     }
 
@@ -126,12 +165,21 @@ public class RockFile
         lock (fileLock)
         {
             CheckFiles();
+            var foundExisting = File.Exists(FilePath);
             File.WriteAllBytes(TempPath, bytes);
-            if (File.Exists(FilePath))
+            if (foundExisting)
             {
                 File.Move(FilePath, BackupPath, true);
             }
             File.Move(TempPath, FilePath);
+            try
+            {
+                archive(FilePath, foundExisting ? BackupPath : null);
+            }
+            catch (Exception archiveEx)
+            {
+                throw new RockFileArchiveException(archiveEx);
+            }
         }
     }
 
