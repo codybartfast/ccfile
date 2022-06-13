@@ -28,8 +28,8 @@ public class FileReadWriteTests
         ClearFiles();
         Assert.Null(rock.ReadBytes());
         Assert.Null(rock.ReadText());
-        Assert.Null(rock.ReadObject<Cake>());
-        Assert.Equal(0, rock.ReadObject<int>());
+        Assert.Null(rock.ReadValue<Cake>());
+        Assert.Equal(0, rock.ReadValue<int>());
     }
 
     [Fact]
@@ -66,12 +66,12 @@ public class FileReadWriteTests
     }
 
     [Fact]
-    public void Object_ReferencesNotEquel()
+    public void Value_ReferencesNotEquel()
     {
         ClearFiles();
         var cake = new Cake();
-        rock.WriteObject<Cake>(cake);
-        var cake2 = rock.ReadObject<Cake>()!;
+        rock.WriteValue<Cake>(cake);
+        var cake2 = rock.ReadValue<Cake>()!;
         Assert.NotSame(cake, cake2);
         Assert.Equal(cake.HasRaisins, cake2.HasRaisins);
         Assert.Equal(cake.SliceCount, cake2.SliceCount);
@@ -79,14 +79,14 @@ public class FileReadWriteTests
     }
 
     [Fact]
-    public void Object_IsWrittenAndReadFromDisk()
+    public void Value_IsWrittenAndReadFromDisk()
     {
         ClearFiles();
         var cake = new Cake();
-        rock.WriteObject<Cake>(cake);
+        rock.WriteValue<Cake>(cake);
         var diskText = File.ReadAllText(rock.FilePath);
         File.WriteAllText(rock.FilePath, diskText.Replace("Stir", "Mix"));
-        var cake2 = rock.ReadObject<Cake>()!;
+        var cake2 = rock.ReadValue<Cake>()!;
         Assert.Equal(true, cake2.HasRaisins);
         Assert.Equal(6, cake2.SliceCount);
         Assert.NotEqual(cake.Recipe, cake2.Recipe);
@@ -111,19 +111,19 @@ public class FileReadWriteTests
     }
 
     [Fact]
-    public void Object_Modify_IsCalled()
+    public void Value_Modify_IsCalled()
     {
         var newRecipe = "Bake well";
         var cake = new Cake();
         Assert.NotEqual(newRecipe, cake.Recipe);
-        rock.WriteObject<Cake>(cake);
-        rock.ModifyObject<Cake>(cake =>
+        rock.WriteValue<Cake>(cake);
+        rock.ModifyValue<Cake>(cake =>
         {
             cake!.SliceCount = 177;
             cake.Recipe = newRecipe;
             return cake;
         });
-        var readCake = rock.ReadObject<Cake>()!;
+        var readCake = rock.ReadValue<Cake>()!;
         Assert.Equal(newRecipe, readCake.Recipe);
         Assert.Equal(177, readCake.SliceCount);
     }

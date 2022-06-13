@@ -1,10 +1,10 @@
 
 namespace Fmbm.IO.Tests;
 
-public class RockFileObjectTests
+public class RockFileValueTests
 {
-    RockFileObject<Cake> rock = new RockFileObject<Cake>(
-        Path.Combine(DirPaths.AppRoot.CheckedPath, "FileObject.txt"));
+    RockValueFile<Cake> rock = new RockValueFile<Cake>(
+        Path.Combine(DirPaths.AppRoot.CheckedPath, "FileValue.txt"));
 
     void ClearFiles()
     {
@@ -15,14 +15,14 @@ public class RockFileObjectTests
     }
 
     [Fact]
-    public void ReadObject_NoFile_ReturnsDefault()
+    public void ReadValue_NoFile_ReturnsDefault()
     {
         ClearFiles();
         Assert.Null(rock.Read());
     }
 
     [Fact]
-    public void FileObject_ReadWrite()
+    public void FileValue_ReadWrite()
     {
         ClearFiles();
         var cake = new Cake();
@@ -32,7 +32,7 @@ public class RockFileObjectTests
     }
 
     [Fact]
-    public void FileObject_Modify()
+    public void FileValue_Modify()
     {
         ClearFiles();
         rock.Modify(cake =>
@@ -43,17 +43,17 @@ public class RockFileObjectTests
         rock.Modify(cake =>
         {
             Assert.NotNull(cake);
-            cake!.Recipe = "FileObject_Modify";
+            cake!.Recipe = "FileValue_Modify";
             return cake;
         });
-        Assert.Equal("FileObject_Modify", rock.Read()!.Recipe);
+        Assert.Equal("FileValue_Modify", rock.Read()!.Recipe);
     }
 
     [Fact]
-    public void FileObject_ValueType()
+    public void FileValue_ValueType()
     {
         ClearFiles();
-        var valRock = new RockFileObject<int>(rock.FilePath);
+        var valRock = new RockValueFile<int>(rock.FilePath);
         Assert.Equal(0, valRock.Read());
         valRock.Write(23);
         Assert.Equal(23, valRock.Read());

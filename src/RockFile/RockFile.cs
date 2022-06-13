@@ -23,14 +23,14 @@ public class RockFile :
     static readonly JsonSerializerOptions serializerOptions =
         new JsonSerializerOptions { WriteIndented = true, };
 
-    public static TObject? BytesToObject<TObject>(byte[] bytes)
+    public static TValue? BytesToValue<TValue>(byte[] bytes)
     {
-        return TextToObject<TObject>(BytesToText(bytes));
+        return TextToValue<TValue>(BytesToText(bytes));
     }
 
-    public static TObject? TextToObject<TObject>(string text)
+    public static TValue? TextToValue<TValue>(string text)
     {
-        return Serializer.Deserialize<TObject>(text);
+        return Serializer.Deserialize<TValue>(text);
     }
 
     public static string BytesToText(byte[] bytes)
@@ -38,14 +38,14 @@ public class RockFile :
         return encoding.GetString(bytes);
     }
 
-    public static byte[] ObjectToBytes<TObject>(TObject obj)
+    public static byte[] ValueToBytes<TValue>(TValue obj)
     {
-        return TextToBytes(ObjectToText<TObject>(obj));
+        return TextToBytes(ValueToText<TValue>(obj));
     }
 
-    public static string ObjectToText<TObject>(TObject obj)
+    public static string ValueToText<TValue>(TValue obj)
     {
-        return Serializer.Serialize<TObject>(obj, serializerOptions);
+        return Serializer.Serialize<TValue>(obj, serializerOptions);
     }
 
     public static byte[] TextToBytes(string text)
@@ -78,17 +78,17 @@ public class RockFile :
         this.archive = archive ?? NoOpArchive;
     }
 
-    public RockFileObject<TObject> CreateFileObject<TObject>()
+    public RockValueFile<TValue> CreateValueFile<TValue>()
     {
-        return new RockFileObject<TObject>(this);
+        return new RockValueFile<TValue>(this);
     }
 
-    public void ModifyObject<TObject>(Func<TObject?, TObject> modify)
+    public void ModifyValue<TValue>(Func<TValue?, TValue> modify)
     {
         lock (fileLock)
         {
-            TObject? modified = default;
-            var existing = ReadObject<TObject>();
+            TValue? modified = default;
+            var existing = ReadValue<TValue>();
             try
             {
                 modified = modify(existing);
@@ -97,19 +97,19 @@ public class RockFile :
             {
                 throw new RockFileModifyException(modifyEx);
             }
-            WriteObject<TObject>(modified);
+            WriteValue<TValue>(modified);
         }
     }
 
-    public TObject? ReadObject<TObject>()
+    public TValue? ReadValue<TValue>()
     {
         byte[]? bytes = ReadBytes();
-        return bytes is null ? default : BytesToObject<TObject>(bytes);
+        return bytes is null ? default : BytesToValue<TValue>(bytes);
     }
 
-    public void WriteObject<TObject>(TObject obj)
+    public void WriteValue<TValue>(TValue obj)
     {
-        WriteBytes(ObjectToBytes<TObject>(obj));
+        WriteBytes(ValueToBytes<TValue>(obj));
     }
 
     public void ModifyText(Func<string?, string> modify)

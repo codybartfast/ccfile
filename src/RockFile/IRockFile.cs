@@ -2,9 +2,9 @@ namespace Fmbm.IO;
 
 public interface IRockFile
 {
-    void ModifyObject<TObject>(Func<TObject?, TObject> modify);
-    TObject? ReadObject<TObject>();
-    void WriteObject<TObject>(TObject obj);
+    void ModifyValue<TValue>(Func<TValue?, TValue> modify);
+    TValue? ReadValue<TValue>();
+    void WriteValue<TValue>(TValue obj);
 
     void ModifyText(Func<string?, string> modify);
     string? ReadText();
@@ -15,18 +15,18 @@ public interface IRockFile
     void WriteBytes(byte[] bytes);
 }
 
-public interface IRockFileObject<TObject>
+public interface IRockFileValue<TValue>
 {
-    void Modify(Func<TObject?, TObject> modify);
-    TObject? Read();
-    void Write(TObject obj);
+    void Modify(Func<TValue?, TValue> modify);
+    TValue? Read();
+    void Write(TValue obj);
 }
 
 public interface IRockGeneric
 {
-    void ModifyObject<TObject>(Func<TObject?, TObject> modify);
-    TObject? ReadObject<TObject>();
-    void WriteObject<TObject>(TObject obj);
+    void ModifyValue<TValue>(Func<TValue?, TValue> modify);
+    TValue? ReadValue<TValue>();
+    void WriteValue<TValue>(TValue obj);
 }
 
 public interface IRockText

@@ -7,15 +7,15 @@ IRockFile rock =
 
 var obj = new Derry();
 
-rock.WriteObject<Derry>(obj);
-rock.ModifyObject<Derry>(obj =>
+rock.WriteValue<Derry>(obj);
+rock.ModifyValue<Derry>(obj =>
 {
     obj!.Erin = "Brokovich";
     return obj;
 });
 Console.WriteLine(rock.ReadText());
-Console.WriteLine(rock.ReadObject<Derry>()!.Erin);
-Console.WriteLine(rock.ReadObject<Derry>()!.Orla);
+Console.WriteLine(rock.ReadValue<Derry>()!.Erin);
+Console.WriteLine(rock.ReadValue<Derry>()!.Orla);
 
 class Derry
 {
