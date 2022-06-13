@@ -60,4 +60,17 @@ public class RockFileValueTests
         valRock.Modify(_ => 42);
         Assert.Equal(42, valRock.Read());
     }
+
+    [Fact]
+    public void ValueFile_ArchveIsCalled(){
+        ClearFiles();
+        bool archiveCalled = false;
+        RockFileArchive archive = (_, _1) => {
+            archiveCalled = true;
+        };
+        var newRock = new RockValueFile<Cake>(rock.FilePath, archive);
+        Assert.False(archiveCalled);
+        newRock.Write(new Cake());
+        Assert.True(archiveCalled);
+    }
 }
