@@ -133,7 +133,7 @@ public class RockFile :
     public string? ReadText()
     {
         byte[]? bytes = ReadBytes();
-        return bytes is null ? null :  BytesToText(bytes);
+        return bytes is null ? null : BytesToText(bytes);
     }
 
     public void WriteText(string text)

@@ -24,7 +24,8 @@ public class FileReadWriteTests
     }
 
     [Fact]
-    public void NoFile_ReturnsDefault(){
+    public void NoFile_ReturnsDefault()
+    {
         ClearFiles();
         Assert.Null(rock.ReadBytes());
         Assert.Null(rock.ReadText());
@@ -206,7 +207,7 @@ public class FileReadWriteTests
         Task.Delay(500).Wait(); // time for task2 to finish if not blocked
         Assert.False(task1.IsCompleted);
         Assert.False(task2.IsCompleted);
-        
+
         blockTask1 = false;
         Task.Delay(100).Wait();
         Assert.True(task1.IsCompleted);
@@ -214,6 +215,16 @@ public class FileReadWriteTests
         Assert.Equal("Brazil", rock1.ReadText());
         Assert.Equal("Brazil", rock2.ReadText());
         Assert.Equal("America", File.ReadAllText(rock.BackupPath));
+    }
+
+    [Fact]
+    public void ValueFile_IsCreated_AndMatches()
+    {
+        ClearFiles();
+        var cake = new Cake { Recipe = "Get more cake!" };
+        rock.WriteValue(cake);
+        var vf = rock.CreateValueFile<Cake>();
+        Assert.Equal("Get more cake!", vf.Read()!.Recipe);
     }
 }
 
