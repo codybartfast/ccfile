@@ -9,7 +9,7 @@ using Serializer = System.Text.Json.JsonSerializer;
 public delegate void RockFileArchive(string filePath, string? backupPath);
 
 public class RockFile :
-    IRockFile, IRockBinaryFile, IRockTextFile, IRockObjectFile
+    IRockFile, IRockBinary, IRockText, IRockGeneric
 {
     const string LockSuffix = ".lck";
     const string BackupSuffix = ".bak";
@@ -19,6 +19,7 @@ public class RockFile :
 
     static readonly ConcurrentDictionary<string, object> fileLockDict =
         new ConcurrentDictionary<string, object>();
+
     static readonly JsonSerializerOptions serializerOptions =
         new JsonSerializerOptions { WriteIndented = true, };
 
@@ -52,7 +53,7 @@ public class RockFile :
         return encoding.GetBytes(text);
     }
 
-    static void NullTee(string _, string? _1) { }
+    static void NoOpArchive(string _, string? _1) { }
 
     private readonly object fileLock;
 
@@ -74,15 +75,15 @@ public class RockFile :
             FilePath.ToUpperInvariant(),
             _ => new Object());
 
-        this.archive = archive ?? ((_, _1) => { });
+        this.archive = archive ?? NoOpArchive;
     }
 
     public void ModifyObject<TObject>(Func<TObject?, TObject> modify)
     {
         lock (fileLock)
         {
-            var existing = ReadObject<TObject>();
             TObject? modified = default;
+            var existing = ReadObject<TObject>();
             try
             {
                 modified = modify(existing);
@@ -109,8 +110,8 @@ public class RockFile :
     {
         lock (fileLock)
         {
-            var existing = ReadText();
             string? modified = null;
+            var existing = ReadText();
             try
             {
                 modified = modify(existing);
@@ -137,8 +138,8 @@ public class RockFile :
     {
         lock (fileLock)
         {
-            var existing = ReadBytes();
             byte[]? modified = null;
+            var existing = ReadBytes();
             try
             {
                 modified = modify(existing);

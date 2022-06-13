@@ -28,7 +28,7 @@ public class BackupExistsWithoutMainException : RockFileException
 public class RockFileModifyException : RockFileException
 {
     public RockFileModifyException(Exception modifyException)
-        : base("Exception thrown by 'modify' function passed to RockFile"
+        : base("Exception thrown by 'Modify' lambda passed to RockFile"
             , modifyException)
     { }
 }

@@ -15,21 +15,21 @@ public interface IRockFile
     void WriteBytes(byte[] bytes);
 }
 
-public interface IRockObjectFile
+public interface IRockGeneric
 {
     void ModifyObject<TObject>(Func<TObject?, TObject> modify);
     TObject? ReadObject<TObject>();
     void WriteObject<TObject>(TObject obj);
 }
 
-public interface IRockTextFile
+public interface IRockText
 {
     void ModifyText(Func<string, string> modify);
     string ReadText();
     void WriteText(string text);
 }
 
-public interface IRockBinaryFile
+public interface IRockBinary
 {
     void ModifyBytes(Func<byte[], byte[]> modify);
     byte[] ReadBytes();
