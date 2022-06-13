@@ -15,7 +15,7 @@ public interface IRockFile
     void WriteBytes(byte[] bytes);
 }
 
-public interface IRockFileValue<TValue>
+public interface IRockValueFile<TValue>
 {
     void Modify(Func<TValue?, TValue> modify);
     TValue? Read();

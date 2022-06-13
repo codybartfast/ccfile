@@ -1,6 +1,6 @@
 namespace Fmbm.IO;
 
-public class RockValueFile<TValue> : IRockFileValue<TValue>
+public class RockValueFile<TValue> : IRockValueFile<TValue>
 {
     public RockFile RockFile { get; }
     public string FilePath { get; }

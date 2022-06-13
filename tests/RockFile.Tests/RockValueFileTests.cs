@@ -1,10 +1,10 @@
 
 namespace Fmbm.IO.Tests;
 
-public class RockFileValueTests
+public class RockValueFileTests
 {
     RockValueFile<Cake> rock = new RockValueFile<Cake>(
-        Path.Combine(DirPaths.AppRoot.CheckedPath, "FileValue.txt"));
+        Path.Combine(DirPaths.AppRoot.CheckedPath, "ValueFile.txt"));
 
     void ClearFiles()
     {
@@ -22,7 +22,7 @@ public class RockFileValueTests
     }
 
     [Fact]
-    public void FileValue_ReadWrite()
+    public void ValueFile_ReadWrite()
     {
         ClearFiles();
         var cake = new Cake();
@@ -32,7 +32,7 @@ public class RockFileValueTests
     }
 
     [Fact]
-    public void FileValue_Modify()
+    public void ValueFile_Modify()
     {
         ClearFiles();
         rock.Modify(cake =>
@@ -43,14 +43,14 @@ public class RockFileValueTests
         rock.Modify(cake =>
         {
             Assert.NotNull(cake);
-            cake!.Recipe = "FileValue_Modify";
+            cake!.Recipe = "ValueFile_Modify";
             return cake;
         });
-        Assert.Equal("FileValue_Modify", rock.Read()!.Recipe);
+        Assert.Equal("ValueFile_Modify", rock.Read()!.Recipe);
     }
 
     [Fact]
-    public void FileValue_ValueType()
+    public void ValueFile_ValueType()
     {
         ClearFiles();
         var valRock = new RockValueFile<int>(rock.FilePath);
