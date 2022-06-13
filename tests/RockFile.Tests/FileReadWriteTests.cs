@@ -12,7 +12,7 @@ public class FileReadWriteTests
     public FileReadWriteTests()
     {
         rock = new RockFile(
-            Path.Combine(DirPaths.AppRoot.CheckedPath, "FileWrite.txt"));
+            Path.Combine(DirPaths.AppRoot.CheckedPath, "FileReadWrite.txt"));
     }
 
     void ClearFiles()
@@ -21,6 +21,15 @@ public class FileReadWriteTests
         File.Delete(rock.TempPath);
         File.Delete(rock.FilePath);
         File.Delete(rock.BackupPath);
+    }
+
+    [Fact]
+    public void NoFile_ReturnsDefault(){
+        ClearFiles();
+        Assert.Null(rock.ReadBytes());
+        Assert.Null(rock.ReadText());
+        Assert.Null(rock.ReadObject<Cake>());
+        Assert.Equal(0, rock.ReadObject<int>());
     }
 
     [Fact]
@@ -124,7 +133,7 @@ public class FileReadWriteTests
     {
         ClearFiles();
         rock.WriteText("One Two Three");
-        rock.ModifyText(text => text.Replace("Two", "And"));
+        rock.ModifyText(text => text!.Replace("Two", "And"));
         Assert.Equal("One And Three", rock.ReadText());
     }
 
@@ -135,10 +144,10 @@ public class FileReadWriteTests
         rock.WriteBytes(encoding.GetBytes("Cat"));
         rock.ModifyBytes(bytes =>
         {
-            bytes[0] = 66;
+            bytes![0] = 66;
             return bytes;
         });
-        Assert.Equal("Bat", encoding.GetString(rock.ReadBytes()));
+        Assert.Equal("Bat", encoding.GetString(rock.ReadBytes()!));
     }
 
     [Fact]
@@ -178,7 +187,7 @@ public class FileReadWriteTests
     {
         ClearFiles();
         var blockTask1 = true;
-        Func<string, string> modify = txt =>
+        Func<string?, string> modify = txt =>
         {
             while (blockTask1)
             {
@@ -189,13 +198,15 @@ public class FileReadWriteTests
         var rock1 = new RockFile(rock.FilePath.ToLower());
         var rock2 = new RockFile(rock.FilePath.ToUpper());
         var task1 = new Task(() => rock1.ModifyText(modify));
+
         task1.Start();
-        Task.Delay(10).Wait(); // time for task1 to attain lock
+        Task.Delay(100).Wait(); // time for task1 to attain lock
         var task2 = new Task(() => rock2.WriteText("Brazil"));
         task2.Start();
         Task.Delay(500).Wait(); // time for task2 to finish if not blocked
         Assert.False(task1.IsCompleted);
         Assert.False(task2.IsCompleted);
+        
         blockTask1 = false;
         Task.Delay(100).Wait();
         Assert.True(task1.IsCompleted);
@@ -206,7 +217,7 @@ public class FileReadWriteTests
     }
 }
 
-class Cake
+public class Cake
 {
     public bool HasRaisins { get; init; } = true;
     public int SliceCount { get; set; } = 6;

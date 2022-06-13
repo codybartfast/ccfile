@@ -6,13 +6,20 @@ public interface IRockFile
     TObject? ReadObject<TObject>();
     void WriteObject<TObject>(TObject obj);
 
-    void ModifyText(Func<string, string> modify);
-    string ReadText();
+    void ModifyText(Func<string?, string> modify);
+    string? ReadText();
     void WriteText(string text);
 
-    void ModifyBytes(Func<byte[], byte[]> modify);
-    byte[] ReadBytes();
+    void ModifyBytes(Func<byte[]?, byte[]> modify);
+    byte[]? ReadBytes();
     void WriteBytes(byte[] bytes);
+}
+
+public interface IRockFileObject<TObject>
+{
+    void Modify(Func<TObject?, TObject> modify);
+    TObject? Read();
+    void Write(TObject obj);
 }
 
 public interface IRockGeneric
@@ -24,14 +31,14 @@ public interface IRockGeneric
 
 public interface IRockText
 {
-    void ModifyText(Func<string, string> modify);
-    string ReadText();
+    void ModifyText(Func<string?, string> modify);
+    string? ReadText();
     void WriteText(string text);
 }
 
 public interface IRockBinary
 {
-    void ModifyBytes(Func<byte[], byte[]> modify);
-    byte[] ReadBytes();
+    void ModifyBytes(Func<byte[]?, byte[]> modify);
+    byte[]? ReadBytes();
     void WriteBytes(byte[] bytes);
 }

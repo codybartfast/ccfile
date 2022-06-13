@@ -78,6 +78,11 @@ public class RockFile :
         this.archive = archive ?? NoOpArchive;
     }
 
+    public RockFileObject<TObject> CreateFileObject<TObject>()
+    {
+        return new RockFileObject<TObject>(this);
+    }
+
     public void ModifyObject<TObject>(Func<TObject?, TObject> modify)
     {
         lock (fileLock)
@@ -98,7 +103,8 @@ public class RockFile :
 
     public TObject? ReadObject<TObject>()
     {
-        return BytesToObject<TObject>(ReadBytes());
+        byte[]? bytes = ReadBytes();
+        return bytes is null ? default : BytesToObject<TObject>(bytes);
     }
 
     public void WriteObject<TObject>(TObject obj)
@@ -106,12 +112,12 @@ public class RockFile :
         WriteBytes(ObjectToBytes<TObject>(obj));
     }
 
-    public void ModifyText(Func<string, string> modify)
+    public void ModifyText(Func<string?, string> modify)
     {
         lock (fileLock)
         {
             string? modified = null;
-            var existing = ReadText();
+            string? existing = ReadText();
             try
             {
                 modified = modify(existing);
@@ -124,9 +130,10 @@ public class RockFile :
         }
     }
 
-    public string ReadText()
+    public string? ReadText()
     {
-        return BytesToText(ReadBytes());
+        byte[]? bytes = ReadBytes();
+        return bytes is null ? null :  BytesToText(bytes);
     }
 
     public void WriteText(string text)
@@ -134,7 +141,7 @@ public class RockFile :
         WriteBytes(TextToBytes(text));
     }
 
-    public void ModifyBytes(Func<byte[], byte[]> modify)
+    public void ModifyBytes(Func<byte[]?, byte[]> modify)
     {
         lock (fileLock)
         {
@@ -152,12 +159,12 @@ public class RockFile :
         }
     }
 
-    public Byte[] ReadBytes()
+    public Byte[]? ReadBytes()
     {
         lock (fileLock)
         {
             CheckFiles();
-            return File.ReadAllBytes(FilePath);
+            return File.Exists(FilePath) ? File.ReadAllBytes(FilePath) : null;
         }
     }
 
