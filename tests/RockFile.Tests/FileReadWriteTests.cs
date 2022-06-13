@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Fmbm.IO.Tests;
 
@@ -170,6 +171,38 @@ public class FileReadWriteTests
                 File.Delete(backupPath);
             }
         }
+    }
+
+    [Fact]
+    public void MultipleInstances_Writing_ShareSameLock()
+    {
+        ClearFiles();
+        var blockTask1 = true;
+        Func<string, string> modify = txt =>
+        {
+            while (blockTask1)
+            {
+                Task.Delay(10).Wait();
+            }
+            return "America";
+        };
+        var rock1 = new RockFile(rock.FilePath.ToLower());
+        var rock2 = new RockFile(rock.FilePath.ToUpper());
+        var task1 = new Task(() => rock1.ModifyText(modify));
+        task1.Start();
+        Task.Delay(10).Wait(); // time for task1 to attain lock
+        var task2 = new Task(() => rock2.WriteText("Brazil"));
+        task2.Start();
+        Task.Delay(500).Wait(); // time for task2 to finish if not blocked
+        Assert.False(task1.IsCompleted);
+        Assert.False(task2.IsCompleted);
+        blockTask1 = false;
+        Task.Delay(100).Wait();
+        Assert.True(task1.IsCompleted);
+        Assert.True(task2.IsCompleted);
+        Assert.Equal("Brazil", rock1.ReadText());
+        Assert.Equal("Brazil", rock2.ReadText());
+        Assert.Equal("America", File.ReadAllText(rock.BackupPath));
     }
 }
 
