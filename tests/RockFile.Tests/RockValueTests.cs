@@ -83,13 +83,64 @@ public class RockValueTests
         Assert.True(archiveCalled);
     }
 
-    [Fact]
-    public void ValueFile_ConstructorTakesRockFile()
+    public void ReadOrWritet_ReturnsExisting()
     {
         ClearFiles();
-        var rockFile = new RockFile(filePath);
-        var rockVal = new RockValue<Cake>(rockFile);
-        rockVal.Write(new Cake { Recipe = "Too many notes" });
-        Assert.Equal("Too many notes", rockFile.ReadValue<Cake>()!.Recipe);
+        var saved = new Cake { Recipe = "He didn't say much" };
+        var created = new Cake { Recipe = "Poling box 246" };
+        Func<Cake> getValue = () => created;
+        rock.Write(saved);
+        var actual = rock.ReadOrWrite(getValue);
+        Assert.Equal(saved.Recipe, actual.Recipe);
     }
+
+    [Fact]
+    public void ReadOrWriteObject_ReturnsCreated()
+    {
+        ClearFiles();
+        // var saved = new Cake{Recipe = "stay the same};
+        var created = new Cake { Recipe = "A wee big scary" };
+        Func<Cake> getValue = () => created;
+        // rock.WriteValue(saved);
+        var actual = rock.ReadOrWrite(getValue);
+        Assert.Equal(created.Recipe, actual.Recipe);
+    }
+
+    [Fact]
+    public void RockValue_ThreeArgConstructor_Existing()
+    {
+        ClearFiles();
+        rock.Write(new Cake { Recipe = "Big Eyes" });
+        var archiveCalled = false;
+        var three = new RockValue<Cake>(
+            rock.FilePath,
+            () => new Cake { Recipe = "Referendum" },
+            (_, _1) => { archiveCalled = true; });
+        Assert.False(archiveCalled);
+        Assert.Equal("Big Eyes", three.Read()!.Recipe);
+    }
+
+    [Fact]
+    public void RockValue_ThreeArgConstructor_Construct()
+    {
+        ClearFiles();
+        // rock.Write(new Cake { Recipe = "Big Eyes" });
+        var archiveCalled = false;
+        var three = new RockValue<Cake>(
+            rock.FilePath,
+            () => new Cake { Recipe = "Referendum" },
+            (_, _1) => { archiveCalled = true; });
+        Assert.True(archiveCalled);
+        Assert.Equal("Referendum", three.Read()!.Recipe);
+    }
+
+    // [Fact]
+    // public void ValueFile_ConstructorTakesRockFile()
+    // {
+    //     ClearFiles();
+    //     var rockFile = new RockFile(filePath);
+    //     var rockVal = new RockValue<Cake>(rockFile);
+    //     rockVal.Write(new Cake { Recipe = "Too many notes" });
+    //     Assert.Equal("Too many notes", rockFile.ReadValue<Cake>()!.Recipe);
+    // }
 }

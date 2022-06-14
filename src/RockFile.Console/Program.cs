@@ -3,12 +3,6 @@
 Action<string> wl = Console.WriteLine;
 Console.WriteLine("Hello, World!");
 
-var fi = new FileInfo("relative");
-wl(fi.FullName);
-wl(Environment.CurrentDirectory);
-Environment.CurrentDirectory =
-    Directory.GetParent(Environment.CurrentDirectory)!.FullName;
-wl(Environment.CurrentDirectory);
-wl(fi.FullName);
-fi.Refresh();
-wl(fi.FullName);
+var rock = new RockFile(DirPaths.AppRoot.CheckedPath +"\\AFile.txt");
+var v = rock.ReadValue<int>();
+Console.WriteLine(v);

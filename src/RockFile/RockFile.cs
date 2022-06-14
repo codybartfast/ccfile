@@ -78,12 +78,33 @@ public class RockFile :
         this.archive = archive ?? NoOpArchive;
     }
 
-    public RockValue<TValue> CreateValueFile<TValue>()
+    // public RockValue<TValue> CreateValueFile<TValue>()
+    // {
+    //     return new RockValue<TValue>(this);
+    // }
+
+    public TValue ReadOrWriteValue<TValue>(Func<TValue> getInitalValue)
     {
-        return new RockValue<TValue>(this);
+        lock (fileLock)
+        {
+            if (!File.Exists(FilePath))
+            {
+                TValue value;
+                try
+                {
+                    value = getInitalValue();
+                }
+                catch (Exception getValueEx)
+                {
+                    throw new RockFileGetInitialValueException(getValueEx);
+                }
+                WriteValue(value);
+            }
+            return ReadValue<TValue>()!;
+        }
     }
 
-    public void ModifyValue<TValue>(Func<TValue?, TValue> modify)
+    public TValue ModifyValue<TValue>(Func<TValue?, TValue> modify)
     {
         lock (fileLock)
         {
@@ -98,6 +119,7 @@ public class RockFile :
                 throw new RockFileModifyException(modifyEx);
             }
             WriteValue<TValue>(modified);
+            return modified;
         }
     }
 
@@ -112,7 +134,29 @@ public class RockFile :
         WriteBytes(ValueToBytes<TValue>(obj));
     }
 
-    public void ModifyText(Func<string?, string> modify)
+    public string ReadOrWriteText(Func<string> getInitialValue)
+    {
+        lock (fileLock)
+        {
+            if (!File.Exists(FilePath))
+            {
+                string value;
+                try
+                {
+                    value = getInitialValue();
+                }
+                catch (Exception getValueEx)
+                {
+                    throw new RockFileGetInitialValueException(getValueEx);
+                }
+                WriteText(value);
+            }
+            return ReadText()!;
+        }
+
+    }
+
+    public string ModifyText(Func<string?, string> modify)
     {
         lock (fileLock)
         {
@@ -127,6 +171,7 @@ public class RockFile :
                 throw new RockFileModifyException(modifyEx);
             }
             WriteText(modified);
+            return modified;
         }
     }
 
@@ -141,7 +186,29 @@ public class RockFile :
         WriteBytes(TextToBytes(text));
     }
 
-    public void ModifyBytes(Func<byte[]?, byte[]> modify)
+    public byte[] ReadOrWriteBytes(Func<Byte[]> getInitialValue)
+    {
+        lock (fileLock)
+        {
+            if (!File.Exists(FilePath))
+            {
+                byte[] value;
+                try
+                {
+                    value = getInitialValue();
+                }
+                catch (Exception getValueEx)
+                {
+                    throw new
+                        RockFileGetInitialValueException(getValueEx);
+                }
+                WriteBytes(value);
+            }
+            return ReadBytes()!;
+        }
+    }
+
+    public byte[] ModifyBytes(Func<byte[]?, byte[]> modify)
     {
         lock (fileLock)
         {
@@ -156,6 +223,7 @@ public class RockFile :
                 throw new RockFileModifyException(modifyEx);
             }
             WriteBytes(modified);
+            return modified;
         }
     }
 

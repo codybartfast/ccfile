@@ -1,44 +1,51 @@
 namespace Fmbm.IO;
 
-public interface IRockFile
+public interface IRockValue<TValue>
 {
-    void ModifyValue<TValue>(Func<TValue?, TValue> modify);
-    TValue? ReadValue<TValue>();
-    void WriteValue<TValue>(TValue obj);
-
-    void ModifyText(Func<string?, string> modify);
-    string? ReadText();
-    void WriteText(string text);
-
-    void ModifyBytes(Func<byte[]?, byte[]> modify);
-    byte[]? ReadBytes();
-    void WriteBytes(byte[] bytes);
-}
-
-public interface IRockValueFile<TValue>
-{
+    TValue ReadOrWrite(Func<TValue> getValue);
     void Modify(Func<TValue?, TValue> modify);
     TValue? Read();
     void Write(TValue obj);
 }
 
+public interface IRockFile
+{
+    TValue ReadOrWriteValue<TValue>(Func<TValue> getValue);
+    TValue ModifyValue<TValue>(Func<TValue?, TValue> modify);
+    TValue? ReadValue<TValue>();
+    void WriteValue<TValue>(TValue obj);
+
+    string ReadOrWriteText(Func<string> getValue);
+    string ModifyText(Func<string?, string> modify);
+    string? ReadText();
+    void WriteText(string text);
+
+    byte[] ReadOrWriteBytes(Func<Byte[]> getValue);
+    byte[] ModifyBytes(Func<byte[]?, byte[]> modify);
+    byte[]? ReadBytes();
+    void WriteBytes(byte[] bytes);
+}
+
 public interface IRockGeneric
 {
-    void ModifyValue<TValue>(Func<TValue?, TValue> modify);
+    TValue ReadOrWriteValue<TValue>(Func<TValue> getValue);
+    TValue ModifyValue<TValue>(Func<TValue?, TValue> modify);
     TValue? ReadValue<TValue>();
     void WriteValue<TValue>(TValue obj);
 }
 
 public interface IRockText
 {
-    void ModifyText(Func<string?, string> modify);
+    string ReadOrWriteText(Func<string> getValue);
+    string ModifyText(Func<string?, string> modify);
     string? ReadText();
     void WriteText(string text);
 }
 
 public interface IRockBinary
 {
-    void ModifyBytes(Func<byte[]?, byte[]> modify);
+    byte[] ReadOrWriteBytes(Func<Byte[]> getValue);
+    byte[] ModifyBytes(Func<byte[]?, byte[]> modify);
     byte[]? ReadBytes();
     void WriteBytes(byte[] bytes);
 }

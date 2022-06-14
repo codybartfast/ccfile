@@ -1,17 +1,43 @@
 namespace Fmbm.IO;
 
-public class RockValue<TValue> : IRockValueFile<TValue>
+public class RockValue<TValue> : IRockValue<TValue>
 {
-    public RockFile RockFile { get; }
+    internal RockFile RockFile { get; }
     public string FilePath { get; }
 
-    public RockValue(string filePath, RockFileArchive? archive = null)
-        : this(new RockFile(filePath, archive)) { }
-
-    public RockValue(RockFile rockFile)
+    public RockValue(
+        string filePath,
+        Func<TValue> getInitialValue,
+        RockFileArchive? archive = null)
+        : this(filePath, archive)
     {
-        this.RockFile = rockFile;
-        this.FilePath = rockFile.FilePath;
+        if (!File.Exists(FilePath))
+        {
+            TValue initialValue;
+            try
+            {
+                initialValue = getInitialValue();
+            }
+            catch (Exception ex)
+            {
+                throw new RockFileGetInitialValueException(ex);
+            }
+            Write(initialValue);
+        }
+    }
+
+    public RockValue(string filePath, RockFileArchive? archive = null)
+    {
+        this.RockFile = new RockFile(filePath, archive);
+        this.FilePath = RockFile.FilePath;
+    }
+
+    // hide RockFile
+    // filepaht -> path
+
+    public TValue ReadOrWrite(Func<TValue> getValue)
+    {
+        return RockFile.ReadOrWriteValue(getValue);
     }
 
     public void Modify(Func<TValue?, TValue> modify)
@@ -24,8 +50,8 @@ public class RockValue<TValue> : IRockValueFile<TValue>
         return RockFile.ReadValue<TValue>();
     }
 
-    public void Write(TValue obj)
+    public void Write(TValue value)
     {
-        RockFile.WriteBytes(RockFile.ValueToBytes<TValue>(obj));
+        RockFile.WriteBytes(RockFile.ValueToBytes<TValue>(value));
     }
 }

@@ -25,6 +25,14 @@ public class BackupExistsWithoutMainException : RockFileException
         : base(message) { }
 }
 
+public class RockFileGetInitialValueException : RockFileException
+{
+    public RockFileGetInitialValueException(Exception getInitialValueException)
+        : base("Exception thrown by 'getInitialValue' lambda passed to RockFile",
+            getInitialValueException)
+    { }
+}
+
 public class RockFileModifyException : RockFileException
 {
     public RockFileModifyException(Exception modifyException)

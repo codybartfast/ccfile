@@ -217,14 +217,110 @@ public class FileReadWriteTests
         Assert.Equal("America", File.ReadAllText(rock.BackupPath));
     }
 
+    // [Fact]
+    // public void ValueFile_IsCreated_AndMatches()
+    // {
+    //     ClearFiles();
+    //     var cake = new Cake { Recipe = "Get more cake!" };
+    //     rock.WriteValue(cake);
+    //     var vf = rock.CreateValueFile<Cake>();
+    //     Assert.Equal("Get more cake!", vf.Read()!.Recipe);
+    // }
+
     [Fact]
-    public void ValueFile_IsCreated_AndMatches()
+    public void ReadOrWriteBytes_ReturnsExisting()
     {
         ClearFiles();
-        var cake = new Cake { Recipe = "Get more cake!" };
-        rock.WriteValue(cake);
-        var vf = rock.CreateValueFile<Cake>();
-        Assert.Equal("Get more cake!", vf.Read()!.Recipe);
+        var saved = new byte[] { 3, 1, 4, 1, 5 };
+        var created = new byte[] { 2, 7, 1, 8, 2 };
+        Func<byte[]> getValue = () => created;
+        rock.WriteBytes(saved);
+        var actual = rock.ReadOrWriteBytes(getValue);
+        Assert.Equal(saved, actual);
+    }
+
+    [Fact]
+    public void ReadOrWriteBytes_WritesWhenNull()
+    {
+        ClearFiles();
+        // var saved = new byte[] { 3, 1, 4, 1, 5 };
+        var created = new byte[] { 2, 7, 1, 8, 2 };
+        Func<byte[]> getValue = () => created;
+        // rock.WriteBytes(saved);
+        var actual = rock.ReadOrWriteBytes(getValue);
+        Assert.Equal(created, actual);
+    }
+
+    [Fact]
+    public void ReadOrWriteString_ReturnsExisting()
+    {
+        ClearFiles();
+        var saved = "storage rocks";
+        var created = "get new strings!";
+        Func<string> getValue = () => created;
+        rock.WriteText(saved);
+        var actual = rock.ReadOrWriteText(getValue);
+        Assert.Equal(saved, actual);
+    }
+
+    [Fact]
+    public void ReadOrWriteString_ReturnsCreated()
+    {
+        ClearFiles();
+        // var saved = "storage rocks";
+        var created = "get new strings!";
+        Func<string> getValue = () => created;
+        // rock.WriteText(saved);
+        var actual = rock.ReadOrWriteText(getValue);
+        Assert.Equal(created, actual);
+    }
+
+    [Fact]
+    public void ReadOrWriteObject_ReturnsExisting()
+    {
+        ClearFiles();
+        var saved = new Cake { Recipe = "storage rocks" };
+        var created = new Cake { Recipe = "get new strings!" };
+        Func<Cake> getValue = () => created;
+        rock.WriteValue(saved);
+        var actual = rock.ReadOrWriteValue(getValue);
+        Assert.Equal(saved.Recipe, actual.Recipe);
+    }
+
+    [Fact]
+    public void ReadOrWriteObject_ReturnsCreated()
+    {
+        ClearFiles();
+        // var saved = new Cake{Recipe = "storage rocks"};
+        var created = new Cake { Recipe = "get new strings!" };
+        Func<Cake> getValue = () => created;
+        // rock.WriteValue(saved);
+        var actual = rock.ReadOrWriteValue(getValue);
+        Assert.Equal(created.Recipe, actual.Recipe);
+    }
+
+    [Fact]
+    public void ReadOrWriteValueType_ReturnsExisting()
+    {
+        ClearFiles();
+        var saved = 9;
+        var created = 9123;
+        Func<int> getValue = () => created;
+        rock.WriteValue(saved);
+        var actual = rock.ReadOrWriteValue<int>(getValue);
+        Assert.Equal(saved, actual);
+    }
+
+    [Fact]
+    public void ReadOrWriteValueType_ReturnsCreated()
+    {
+        ClearFiles();
+        // var saved = 9;
+        var created = 9123;
+        Func<int> getValue = () => created;
+        // rock.WriteValue(saved);
+        var actual = rock.ReadOrWriteValue<int>(getValue);
+        Assert.Equal(created, actual);
     }
 }
 
