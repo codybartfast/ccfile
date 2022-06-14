@@ -1,16 +1,16 @@
 
 namespace Fmbm.IO.Tests;
 
-public class RockValueFileTests
+public class RockValueTests
 {
     readonly string filePath;
-    readonly RockValueFile<Cake> rock;
+    readonly RockValue<Cake> rock;
 
-    public RockValueFileTests()
+    public RockValueTests()
     {
         filePath =
             Path.Combine(DirPaths.AppRoot.CheckedPath, "ValueFile.txt");
-        rock = new RockValueFile<Cake>(filePath);
+        rock = new RockValue<Cake>(filePath);
     }
 
     void ClearFiles()
@@ -60,7 +60,7 @@ public class RockValueFileTests
     public void ValueFile_ValueType()
     {
         ClearFiles();
-        var valRock = new RockValueFile<int>(rock.FilePath);
+        var valRock = new RockValue<int>(rock.FilePath);
         Assert.Equal(0, valRock.Read());
         valRock.Write(23);
         Assert.Equal(23, valRock.Read());
@@ -77,7 +77,7 @@ public class RockValueFileTests
         {
             archiveCalled = true;
         };
-        var newRock = new RockValueFile<Cake>(rock.FilePath, archive);
+        var newRock = new RockValue<Cake>(rock.FilePath, archive);
         Assert.False(archiveCalled);
         newRock.Write(new Cake());
         Assert.True(archiveCalled);
@@ -88,7 +88,7 @@ public class RockValueFileTests
     {
         ClearFiles();
         var rockFile = new RockFile(filePath);
-        var rockVal = new RockValueFile<Cake>(rockFile);
+        var rockVal = new RockValue<Cake>(rockFile);
         rockVal.Write(new Cake { Recipe = "Too many notes" });
         Assert.Equal("Too many notes", rockFile.ReadValue<Cake>()!.Recipe);
     }

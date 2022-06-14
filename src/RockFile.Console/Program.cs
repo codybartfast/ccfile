@@ -1,25 +1,14 @@
 ﻿using Fmbm.IO;
 
+Action<string> wl = Console.WriteLine;
 Console.WriteLine("Hello, World!");
 
-IRockFile rock =
-    new RockFile(Path.Combine(DirPaths.AppRoot.CheckedPath, "AFile.txt"));
-
-var obj = new Derry();
-
-rock.WriteValue<Derry>(obj);
-rock.ModifyValue<Derry>(obj =>
-{
-    obj!.Erin = "Brokovich";
-    return obj;
-});
-Console.WriteLine(rock.ReadText());
-Console.WriteLine(rock.ReadValue<Derry>()!.Erin);
-Console.WriteLine(rock.ReadValue<Derry>()!.Orla);
-
-class Derry
-{
-    public string Erin { get; set; } = "Quinn";
-    public string Orla { get; } = "McCool";
-
-}
+var fi = new FileInfo("relative");
+wl(fi.FullName);
+wl(Environment.CurrentDirectory);
+Environment.CurrentDirectory =
+    Directory.GetParent(Environment.CurrentDirectory)!.FullName;
+wl(Environment.CurrentDirectory);
+wl(fi.FullName);
+fi.Refresh();
+wl(fi.FullName);

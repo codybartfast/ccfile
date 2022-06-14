@@ -78,9 +78,9 @@ public class RockFile :
         this.archive = archive ?? NoOpArchive;
     }
 
-    public RockValueFile<TValue> CreateValueFile<TValue>()
+    public RockValue<TValue> CreateValueFile<TValue>()
     {
-        return new RockValueFile<TValue>(this);
+        return new RockValue<TValue>(this);
     }
 
     public void ModifyValue<TValue>(Func<TValue?, TValue> modify)

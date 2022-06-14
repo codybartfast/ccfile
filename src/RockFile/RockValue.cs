@@ -1,14 +1,14 @@
 namespace Fmbm.IO;
 
-public class RockValueFile<TValue> : IRockValueFile<TValue>
+public class RockValue<TValue> : IRockValueFile<TValue>
 {
     public RockFile RockFile { get; }
     public string FilePath { get; }
 
-    public RockValueFile(string filePath, RockFileArchive? archive = null)
+    public RockValue(string filePath, RockFileArchive? archive = null)
         : this(new RockFile(filePath, archive)) { }
 
-    public RockValueFile(RockFile rockFile)
+    public RockValue(RockFile rockFile)
     {
         this.RockFile = rockFile;
         this.FilePath = rockFile.FilePath;
