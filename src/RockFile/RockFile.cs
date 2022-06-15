@@ -6,8 +6,6 @@ using System.Text;
 using System.Text.Json;
 using Serializer = System.Text.Json.JsonSerializer;
 
-public delegate void RockFileArchive(string filePath, string? backupPath);
-
 public class RockFile :
     IRockFile, IRockBinary, IRockText, IRockGeneric
 {
@@ -62,9 +60,9 @@ public class RockFile :
     internal string BackupPath { get; }
     internal string TempPath { get; }
 
-    readonly RockFileArchive archive;
+    readonly Action<string, string?> archive;
 
-    public RockFile(string filePath, RockFileArchive? archive = null)
+    public RockFile(string filePath, Action<string, string?>? archive = null)
     {
         Path = new FileInfo(filePath).FullName;
         LockPath = Path + LockSuffix;

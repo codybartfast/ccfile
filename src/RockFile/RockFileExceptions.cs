@@ -28,7 +28,7 @@ public class BackupExistsWithoutMainException : RockFileException
 public class RockFileGetInitialValueException : RockFileException
 {
     public RockFileGetInitialValueException(Exception getInitialValueException)
-        : base("Exception thrown by 'getInitialValue' lambda passed to RockFile",
+        : base("Exception thrown by 'getInitialValue' Func passed to RockFile",
             getInitialValueException)
     { }
 }
@@ -36,7 +36,7 @@ public class RockFileGetInitialValueException : RockFileException
 public class RockFileModifyException : RockFileException
 {
     public RockFileModifyException(Exception modifyException)
-        : base("Exception thrown by 'Modify' lambda passed to RockFile"
+        : base("Exception thrown by 'Modify' Func passed to RockFile"
             , modifyException)
     { }
 }
@@ -44,7 +44,7 @@ public class RockFileModifyException : RockFileException
 public class RockFileArchiveException : RockFileException
 {
     public RockFileArchiveException(Exception archiveException)
-    : base("Exception thrown by 'Archive' delegate passed to RockFile"
+    : base("Exception thrown by 'Archive' Action passed to RockFile"
         , archiveException)
     { }
 }

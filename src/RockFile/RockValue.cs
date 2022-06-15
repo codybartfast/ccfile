@@ -8,7 +8,7 @@ public class RockValue<TValue> : IRockValue<TValue>
     public RockValue(
         string filePath,
         Func<TValue> getInitialValue,
-        RockFileArchive? archive = null)
+        Action<string, string?>? archive = null)
         : this(filePath, archive)
     {
         if (!File.Exists(Path))
@@ -26,7 +26,7 @@ public class RockValue<TValue> : IRockValue<TValue>
         }
     }
 
-    public RockValue(string filePath, RockFileArchive? archive = null)
+    public RockValue(string filePath, Action<string, string?>? archive = null)
     {
         this.RockFile = new RockFile(filePath, archive);
         this.Path = RockFile.Path;

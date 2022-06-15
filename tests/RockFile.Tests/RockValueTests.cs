@@ -73,7 +73,7 @@ public class RockValueTests
     {
         ClearFiles();
         bool archiveCalled = false;
-        RockFileArchive archive = (_, _1) =>
+        Action<string, string?> archive = (_, _1) =>
         {
             archiveCalled = true;
         };

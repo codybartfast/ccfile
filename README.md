@@ -1,12 +1,6 @@
 RockFile
 ========
 
-File persistence with the performance and flexibility of a rock!
-
-Security: Paths may be revealed.
-
-remove delegate
-
 ```Text
 ┌──────┬──────┬──────┬──────┬──────────────────────────────────────────────┐
 │ .lck │ .tmp │ file │ .bak │ Recommendation                               │
