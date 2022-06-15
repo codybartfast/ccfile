@@ -1,11 +1,11 @@
 namespace Fmbm.IO;
 
-public class RockValue<TValue> : IRockValue<TValue>
+public class CCValue<TValue> : ICCValue<TValue>
 {
-    internal RockFile RockFile { get; }
+    internal CCFile CCFile { get; }
     public string Path { get; }
 
-    public RockValue(
+    public CCValue(
         string filePath,
         Func<TValue> getInitialValue,
         Action<string, string?>? archive = null)
@@ -20,38 +20,38 @@ public class RockValue<TValue> : IRockValue<TValue>
             }
             catch (Exception ex)
             {
-                throw new RockFileGetInitialValueException(ex);
+                throw new CCFileGetInitialValueException(ex);
             }
             Write(initialValue);
         }
     }
 
-    public RockValue(string filePath, Action<string, string?>? archive = null)
+    public CCValue(string filePath, Action<string, string?>? archive = null)
     {
-        this.RockFile = new RockFile(filePath, archive);
-        this.Path = RockFile.Path;
+        this.CCFile = new CCFile(filePath, archive);
+        this.Path = CCFile.Path;
     }
 
-    // hide RockFile
+    // hide CCFile
     // filepaht -> path
 
     public TValue ReadOrWrite(Func<TValue> getValue)
     {
-        return RockFile.ReadOrWriteValue(getValue);
+        return CCFile.ReadOrWriteValue(getValue);
     }
 
     public void Modify(Func<TValue?, TValue> modify)
     {
-        RockFile.ModifyValue<TValue>(modify);
+        CCFile.ModifyValue<TValue>(modify);
     }
 
     public TValue? Read()
     {
-        return RockFile.ReadValue<TValue>();
+        return CCFile.ReadValue<TValue>();
     }
 
     public void Write(TValue value)
     {
-        RockFile.WriteBytes(RockFile.ValueToBytes<TValue>(value));
+        CCFile.WriteBytes(CCFile.ValueToBytes<TValue>(value));
     }
 }

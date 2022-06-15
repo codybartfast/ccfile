@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\RockFile\RockFile.csproj" />
+    <ProjectReference Include="..\CCFile\CCFile.csproj" />
   </ItemGroup>
 
   <ItemGroup>

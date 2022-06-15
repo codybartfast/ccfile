@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8CEDD5C1-C8F5-4490-A369-1676F8DF22F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockFile", "src\RockFile\RockFile.csproj", "{A739642C-D162-4204-8E50-9BE26FE24E91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCFile", "src\CCFile\CCFile.csproj", "{A739642C-D162-4204-8E50-9BE26FE24E91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockFile.Console", "src\RockFile.Console\RockFile.Console.csproj", "{44E89FBF-A3D4-4AC4-8C57-429D40C465C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCFile.Console", "src\CCFile.Console\CCFile.Console.csproj", "{44E89FBF-A3D4-4AC4-8C57-429D40C465C7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{00BB39BA-9B93-4858-992B-D699F1154C7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockFile.Tests", "tests\RockFile.Tests\RockFile.Tests.csproj", "{6A0F63E1-0625-498E-ABF1-8039B4944A73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCFile.Tests", "tests\CCFile.Tests\CCFile.Tests.csproj", "{6A0F63E1-0625-498E-ABF1-8039B4944A73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

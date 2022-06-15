@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\RockFile\RockFile.csproj" />
+    <ProjectReference Include="..\..\src\CCFile\CCFile.csproj" />
   </ItemGroup>
 
 </Project>

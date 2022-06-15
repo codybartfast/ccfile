@@ -1,31 +1,31 @@
 
 namespace Fmbm.IO.Tests;
 
-public class RockValueTests
+public class CCValueTests
 {
     readonly string filePath;
-    readonly RockValue<Cake> rock;
+    readonly CCValue<Cake> ccfile;
 
-    public RockValueTests()
+    public CCValueTests()
     {
         filePath =
             Path.Combine(DirPaths.AppRoot.CheckedPath, "ValueFile.txt");
-        rock = new RockValue<Cake>(filePath);
+        ccfile = new CCValue<Cake>(filePath);
     }
 
     void ClearFiles()
     {
-        File.Delete(rock.RockFile.LockPath);
-        File.Delete(rock.RockFile.TempPath);
-        File.Delete(rock.RockFile.Path);
-        File.Delete(rock.RockFile.BackupPath);
+        File.Delete(ccfile.CCFile.LockPath);
+        File.Delete(ccfile.CCFile.TempPath);
+        File.Delete(ccfile.CCFile.Path);
+        File.Delete(ccfile.CCFile.BackupPath);
     }
 
     [Fact]
     public void ReadValue_NoFile_ReturnsDefault()
     {
         ClearFiles();
-        Assert.Null(rock.Read());
+        Assert.Null(ccfile.Read());
     }
 
     [Fact]
@@ -34,38 +34,38 @@ public class RockValueTests
         ClearFiles();
         var cake = new Cake();
         cake.Recipe = "ReadWrite";
-        rock.Write(cake);
-        Assert.Equal("ReadWrite", rock.Read()!.Recipe);
+        ccfile.Write(cake);
+        Assert.Equal("ReadWrite", ccfile.Read()!.Recipe);
     }
 
     [Fact]
     public void ValueFile_Modify()
     {
         ClearFiles();
-        rock.Modify(cake =>
+        ccfile.Modify(cake =>
         {
             Assert.Null(cake);
             return new Cake();
         });
-        rock.Modify(cake =>
+        ccfile.Modify(cake =>
         {
             Assert.NotNull(cake);
             cake!.Recipe = "ValueFile_Modify";
             return cake;
         });
-        Assert.Equal("ValueFile_Modify", rock.Read()!.Recipe);
+        Assert.Equal("ValueFile_Modify", ccfile.Read()!.Recipe);
     }
 
     [Fact]
     public void ValueFile_ValueType()
     {
         ClearFiles();
-        var valRock = new RockValue<int>(rock.Path);
-        Assert.Equal(0, valRock.Read());
-        valRock.Write(23);
-        Assert.Equal(23, valRock.Read());
-        valRock.Modify(_ => 42);
-        Assert.Equal(42, valRock.Read());
+        var valCC = new CCValue<int>(ccfile.Path);
+        Assert.Equal(0, valCC.Read());
+        valCC.Write(23);
+        Assert.Equal(23, valCC.Read());
+        valCC.Modify(_ => 42);
+        Assert.Equal(42, valCC.Read());
     }
 
     [Fact]
@@ -77,9 +77,9 @@ public class RockValueTests
         {
             archiveCalled = true;
         };
-        var newRock = new RockValue<Cake>(rock.Path, archive);
+        var newCC = new CCValue<Cake>(ccfile.Path, archive);
         Assert.False(archiveCalled);
-        newRock.Write(new Cake());
+        newCC.Write(new Cake());
         Assert.True(archiveCalled);
     }
 
@@ -89,8 +89,8 @@ public class RockValueTests
         var saved = new Cake { Recipe = "He didn't say much" };
         var created = new Cake { Recipe = "Poling box 246" };
         Func<Cake> getValue = () => created;
-        rock.Write(saved);
-        var actual = rock.ReadOrWrite(getValue);
+        ccfile.Write(saved);
+        var actual = ccfile.ReadOrWrite(getValue);
         Assert.Equal(saved.Recipe, actual.Recipe);
     }
 
@@ -101,19 +101,19 @@ public class RockValueTests
         // var saved = new Cake{Recipe = "stay the same};
         var created = new Cake { Recipe = "A wee big scary" };
         Func<Cake> getValue = () => created;
-        // rock.WriteValue(saved);
-        var actual = rock.ReadOrWrite(getValue);
+        // ccfile.WriteValue(saved);
+        var actual = ccfile.ReadOrWrite(getValue);
         Assert.Equal(created.Recipe, actual.Recipe);
     }
 
     [Fact]
-    public void RockValue_ThreeArgConstructor_Existing()
+    public void CCValue_ThreeArgConstructor_Existing()
     {
         ClearFiles();
-        rock.Write(new Cake { Recipe = "Big Eyes" });
+        ccfile.Write(new Cake { Recipe = "Big Eyes" });
         var archiveCalled = false;
-        var three = new RockValue<Cake>(
-            rock.Path,
+        var three = new CCValue<Cake>(
+            ccfile.Path,
             () => new Cake { Recipe = "Referendum" },
             (_, _1) => { archiveCalled = true; });
         Assert.False(archiveCalled);
@@ -121,13 +121,13 @@ public class RockValueTests
     }
 
     [Fact]
-    public void RockValue_ThreeArgConstructor_Construct()
+    public void CCValue_ThreeArgConstructor_Construct()
     {
         ClearFiles();
-        // rock.Write(new Cake { Recipe = "Big Eyes" });
+        // ccfile.Write(new Cake { Recipe = "Big Eyes" });
         var archiveCalled = false;
-        var three = new RockValue<Cake>(
-            rock.Path,
+        var three = new CCValue<Cake>(
+            ccfile.Path,
             () => new Cake { Recipe = "Referendum" },
             (_, _1) => { archiveCalled = true; });
         Assert.True(archiveCalled);
@@ -135,12 +135,12 @@ public class RockValueTests
     }
 
     // [Fact]
-    // public void ValueFile_ConstructorTakesRockFile()
+    // public void ValueFile_ConstructorTakesCCFile()
     // {
     //     ClearFiles();
-    //     var rockFile = new RockFile(filePath);
-    //     var rockVal = new RockValue<Cake>(rockFile);
-    //     rockVal.Write(new Cake { Recipe = "Too many notes" });
-    //     Assert.Equal("Too many notes", rockFile.ReadValue<Cake>()!.Recipe);
+    //     var ccFile = new CCFile(filePath);
+    //     var ccVal = new CCValue<Cake>(ccFile);
+    //     ccVal.Write(new Cake { Recipe = "Too many notes" });
+    //     Assert.Equal("Too many notes", ccFile.ReadValue<Cake>()!.Recipe);
     // }
 }

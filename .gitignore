@@ -1,6 +1,6 @@
 ## Not in template
 
-/src/RockFile.Console/AppRoot/
+/src/CCFile.Console/AppRoot/
 /tests/**/AppRoot/
 
 ## Ignore Visual Studio temporary files, build results, and

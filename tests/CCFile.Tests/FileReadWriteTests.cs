@@ -7,30 +7,30 @@ public class FileReadWriteTests
 {
     readonly Encoding encoding = Encoding.UTF8;
 
-    readonly RockFile rock;
+    readonly CCFile ccfile;
 
     public FileReadWriteTests()
     {
-        rock = new RockFile(
+        ccfile = new CCFile(
             Path.Combine(DirPaths.AppRoot.CheckedPath, "FileReadWrite.txt"));
     }
 
     void ClearFiles()
     {
-        File.Delete(rock.LockPath);
-        File.Delete(rock.TempPath);
-        File.Delete(rock.Path);
-        File.Delete(rock.BackupPath);
+        File.Delete(ccfile.LockPath);
+        File.Delete(ccfile.TempPath);
+        File.Delete(ccfile.Path);
+        File.Delete(ccfile.BackupPath);
     }
 
     [Fact]
     public void NoFile_ReturnsDefault()
     {
         ClearFiles();
-        Assert.Null(rock.ReadBytes());
-        Assert.Null(rock.ReadText());
-        Assert.Null(rock.ReadValue<Cake>());
-        Assert.Equal(0, rock.ReadValue<int>());
+        Assert.Null(ccfile.ReadBytes());
+        Assert.Null(ccfile.ReadText());
+        Assert.Null(ccfile.ReadValue<Cake>());
+        Assert.Equal(0, ccfile.ReadValue<int>());
     }
 
     [Fact]
@@ -39,8 +39,8 @@ public class FileReadWriteTests
         ClearFiles();
         var text = DateTime.UtcNow.ToString("o") + "WritesToDisk";
         var bytes = encoding.GetBytes(text);
-        rock.WriteBytes(bytes);
-        var diskBytes = File.ReadAllBytes(rock.Path);
+        ccfile.WriteBytes(bytes);
+        var diskBytes = File.ReadAllBytes(ccfile.Path);
         Assert.Equal(bytes, diskBytes);
     }
 
@@ -50,20 +50,20 @@ public class FileReadWriteTests
         ClearFiles();
         var text = DateTime.UtcNow.ToString("o") + "ReadsFromDisk";
         var bytes = encoding.GetBytes(text);
-        File.WriteAllBytes(rock.Path, bytes);
-        var rockBytes = rock.ReadBytes();
-        Assert.Equal(bytes, rockBytes);
+        File.WriteAllBytes(ccfile.Path, bytes);
+        var ccBytes = ccfile.ReadBytes();
+        Assert.Equal(bytes, ccBytes);
     }
 
     [Fact]
     public void Text_IsWrittenAndReadFromDisk()
     {
         ClearFiles();
-        rock.WriteText("Apple Banana Cherry");
-        var diskText = File.ReadAllText(rock.Path);
-        File.WriteAllText(rock.Path,
+        ccfile.WriteText("Apple Banana Cherry");
+        var diskText = File.ReadAllText(ccfile.Path);
+        File.WriteAllText(ccfile.Path,
             diskText.Replace("Banana", "Blueberry"));
-        Assert.Equal("Apple Blueberry Cherry", rock.ReadText());
+        Assert.Equal("Apple Blueberry Cherry", ccfile.ReadText());
     }
 
     [Fact]
@@ -71,8 +71,8 @@ public class FileReadWriteTests
     {
         ClearFiles();
         var cake = new Cake();
-        rock.WriteValue<Cake>(cake);
-        var cake2 = rock.ReadValue<Cake>()!;
+        ccfile.WriteValue<Cake>(cake);
+        var cake2 = ccfile.ReadValue<Cake>()!;
         Assert.NotSame(cake, cake2);
         Assert.Equal(cake.HasRaisins, cake2.HasRaisins);
         Assert.Equal(cake.SliceCount, cake2.SliceCount);
@@ -84,10 +84,10 @@ public class FileReadWriteTests
     {
         ClearFiles();
         var cake = new Cake();
-        rock.WriteValue<Cake>(cake);
-        var diskText = File.ReadAllText(rock.Path);
-        File.WriteAllText(rock.Path, diskText.Replace("Stir", "Mix"));
-        var cake2 = rock.ReadValue<Cake>()!;
+        ccfile.WriteValue<Cake>(cake);
+        var diskText = File.ReadAllText(ccfile.Path);
+        File.WriteAllText(ccfile.Path, diskText.Replace("Stir", "Mix"));
+        var cake2 = ccfile.ReadValue<Cake>()!;
         Assert.Equal(true, cake2.HasRaisins);
         Assert.Equal(6, cake2.SliceCount);
         Assert.NotEqual(cake.Recipe, cake2.Recipe);
@@ -98,17 +98,17 @@ public class FileReadWriteTests
     public void File_IsBackedUp()
     {
         ClearFiles();
-        rock.WriteText("Apple");
-        Assert.Equal("Apple", File.ReadAllText(rock.Path));
-        Assert.False(File.Exists(rock.BackupPath));
+        ccfile.WriteText("Apple");
+        Assert.Equal("Apple", File.ReadAllText(ccfile.Path));
+        Assert.False(File.Exists(ccfile.BackupPath));
 
-        rock.WriteText("Banana");
-        Assert.Equal("Banana", File.ReadAllText(rock.Path));
-        Assert.Equal("Apple", File.ReadAllText(rock.BackupPath));
+        ccfile.WriteText("Banana");
+        Assert.Equal("Banana", File.ReadAllText(ccfile.Path));
+        Assert.Equal("Apple", File.ReadAllText(ccfile.BackupPath));
 
-        rock.WriteText("Cherry");
-        Assert.Equal("Cherry", File.ReadAllText(rock.Path));
-        Assert.Equal("Banana", File.ReadAllText(rock.BackupPath));
+        ccfile.WriteText("Cherry");
+        Assert.Equal("Cherry", File.ReadAllText(ccfile.Path));
+        Assert.Equal("Banana", File.ReadAllText(ccfile.BackupPath));
     }
 
     [Fact]
@@ -117,14 +117,14 @@ public class FileReadWriteTests
         var newRecipe = "Bake well";
         var cake = new Cake();
         Assert.NotEqual(newRecipe, cake.Recipe);
-        rock.WriteValue<Cake>(cake);
-        rock.ModifyValue<Cake>(cake =>
+        ccfile.WriteValue<Cake>(cake);
+        ccfile.ModifyValue<Cake>(cake =>
         {
             cake!.SliceCount = 177;
             cake.Recipe = newRecipe;
             return cake;
         });
-        var readCake = rock.ReadValue<Cake>()!;
+        var readCake = ccfile.ReadValue<Cake>()!;
         Assert.Equal(newRecipe, readCake.Recipe);
         Assert.Equal(177, readCake.SliceCount);
     }
@@ -133,22 +133,22 @@ public class FileReadWriteTests
     public void Text_Modify_IsCalled()
     {
         ClearFiles();
-        rock.WriteText("One Two Three");
-        rock.ModifyText(text => text!.Replace("Two", "And"));
-        Assert.Equal("One And Three", rock.ReadText());
+        ccfile.WriteText("One Two Three");
+        ccfile.ModifyText(text => text!.Replace("Two", "And"));
+        Assert.Equal("One And Three", ccfile.ReadText());
     }
 
     [Fact]
     public void Binary_Modify_IsCalled()
     {
         ClearFiles();
-        rock.WriteBytes(encoding.GetBytes("Cat"));
-        rock.ModifyBytes(bytes =>
+        ccfile.WriteBytes(encoding.GetBytes("Cat"));
+        ccfile.ModifyBytes(bytes =>
         {
             bytes![0] = 66;
             return bytes;
         });
-        Assert.Equal("Bat", encoding.GetString(rock.ReadBytes()!));
+        Assert.Equal("Bat", encoding.GetString(ccfile.ReadBytes()!));
     }
 
     [Fact]
@@ -158,17 +158,17 @@ public class FileReadWriteTests
         string? backupContent = null;
 
         ClearFiles();
-        var arcRock = new RockFile(this.rock.Path, Archive);
+        var arcCC = new CCFile(this.ccfile.Path, Archive);
 
-        arcRock.WriteText("Apple Pie");
+        arcCC.WriteText("Apple Pie");
         Assert.Equal(fileContent, "Apple Pie");
         Assert.Null(backupContent);
 
-        arcRock.WriteText("Banana Split");
+        arcCC.WriteText("Banana Split");
         Assert.Equal(fileContent, "Banana Split");
         Assert.Equal(backupContent, "Apple Pie");
 
-        arcRock.WriteText("Cherry Cola");
+        arcCC.WriteText("Cherry Cola");
         Assert.Equal(fileContent, "Cherry Cola");
         Assert.Equal(backupContent, "Banana Split");
 
@@ -196,13 +196,13 @@ public class FileReadWriteTests
             }
             return "America";
         };
-        var rock1 = new RockFile(rock.Path.ToLower());
-        var rock2 = new RockFile(rock.Path.ToUpper());
-        var task1 = new Task(() => rock1.ModifyText(modify));
+        var ccfile1 = new CCFile(ccfile.Path.ToLower());
+        var ccfile2 = new CCFile(ccfile.Path.ToUpper());
+        var task1 = new Task(() => ccfile1.ModifyText(modify));
 
         task1.Start();
         Task.Delay(100).Wait(); // time for task1 to attain lock
-        var task2 = new Task(() => rock2.WriteText("Brazil"));
+        var task2 = new Task(() => ccfile2.WriteText("Brazil"));
         task2.Start();
         Task.Delay(500).Wait(); // time for task2 to finish if not blocked
         Assert.False(task1.IsCompleted);
@@ -212,9 +212,9 @@ public class FileReadWriteTests
         Task.Delay(100).Wait();
         Assert.True(task1.IsCompleted);
         Assert.True(task2.IsCompleted);
-        Assert.Equal("Brazil", rock1.ReadText());
-        Assert.Equal("Brazil", rock2.ReadText());
-        Assert.Equal("America", File.ReadAllText(rock.BackupPath));
+        Assert.Equal("Brazil", ccfile1.ReadText());
+        Assert.Equal("Brazil", ccfile2.ReadText());
+        Assert.Equal("America", File.ReadAllText(ccfile.BackupPath));
     }
 
     // [Fact]
@@ -222,8 +222,8 @@ public class FileReadWriteTests
     // {
     //     ClearFiles();
     //     var cake = new Cake { Recipe = "Get more cake!" };
-    //     rock.WriteValue(cake);
-    //     var vf = rock.CreateValueFile<Cake>();
+    //     ccfile.WriteValue(cake);
+    //     var vf = ccfile.CreateValueFile<Cake>();
     //     Assert.Equal("Get more cake!", vf.Read()!.Recipe);
     // }
 
@@ -234,8 +234,8 @@ public class FileReadWriteTests
         var saved = new byte[] { 3, 1, 4, 1, 5 };
         var created = new byte[] { 2, 7, 1, 8, 2 };
         Func<byte[]> getValue = () => created;
-        rock.WriteBytes(saved);
-        var actual = rock.ReadOrWriteBytes(getValue);
+        ccfile.WriteBytes(saved);
+        var actual = ccfile.ReadOrWriteBytes(getValue);
         Assert.Equal(saved, actual);
     }
 
@@ -246,8 +246,8 @@ public class FileReadWriteTests
         // var saved = new byte[] { 3, 1, 4, 1, 5 };
         var created = new byte[] { 2, 7, 1, 8, 2 };
         Func<byte[]> getValue = () => created;
-        // rock.WriteBytes(saved);
-        var actual = rock.ReadOrWriteBytes(getValue);
+        // ccfile.WriteBytes(saved);
+        var actual = ccfile.ReadOrWriteBytes(getValue);
         Assert.Equal(created, actual);
     }
 
@@ -258,8 +258,8 @@ public class FileReadWriteTests
         var saved = "storage rocks";
         var created = "get new strings!";
         Func<string> getValue = () => created;
-        rock.WriteText(saved);
-        var actual = rock.ReadOrWriteText(getValue);
+        ccfile.WriteText(saved);
+        var actual = ccfile.ReadOrWriteText(getValue);
         Assert.Equal(saved, actual);
     }
 
@@ -270,8 +270,8 @@ public class FileReadWriteTests
         // var saved = "storage rocks";
         var created = "get new strings!";
         Func<string> getValue = () => created;
-        // rock.WriteText(saved);
-        var actual = rock.ReadOrWriteText(getValue);
+        // ccfile.WriteText(saved);
+        var actual = ccfile.ReadOrWriteText(getValue);
         Assert.Equal(created, actual);
     }
 
@@ -282,8 +282,8 @@ public class FileReadWriteTests
         var saved = new Cake { Recipe = "storage rocks" };
         var created = new Cake { Recipe = "get new strings!" };
         Func<Cake> getValue = () => created;
-        rock.WriteValue(saved);
-        var actual = rock.ReadOrWriteValue(getValue);
+        ccfile.WriteValue(saved);
+        var actual = ccfile.ReadOrWriteValue(getValue);
         Assert.Equal(saved.Recipe, actual.Recipe);
     }
 
@@ -294,8 +294,8 @@ public class FileReadWriteTests
         // var saved = new Cake{Recipe = "storage rocks"};
         var created = new Cake { Recipe = "get new strings!" };
         Func<Cake> getValue = () => created;
-        // rock.WriteValue(saved);
-        var actual = rock.ReadOrWriteValue(getValue);
+        // ccfile.WriteValue(saved);
+        var actual = ccfile.ReadOrWriteValue(getValue);
         Assert.Equal(created.Recipe, actual.Recipe);
     }
 
@@ -306,8 +306,8 @@ public class FileReadWriteTests
         var saved = 9;
         var created = 9123;
         Func<int> getValue = () => created;
-        rock.WriteValue(saved);
-        var actual = rock.ReadOrWriteValue<int>(getValue);
+        ccfile.WriteValue(saved);
+        var actual = ccfile.ReadOrWriteValue<int>(getValue);
         Assert.Equal(saved, actual);
     }
 
@@ -318,8 +318,8 @@ public class FileReadWriteTests
         // var saved = 9;
         var created = 9123;
         Func<int> getValue = () => created;
-        // rock.WriteValue(saved);
-        var actual = rock.ReadOrWriteValue<int>(getValue);
+        // ccfile.WriteValue(saved);
+        var actual = ccfile.ReadOrWriteValue<int>(getValue);
         Assert.Equal(created, actual);
     }
 }

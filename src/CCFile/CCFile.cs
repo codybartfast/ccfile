@@ -6,8 +6,8 @@ using System.Text;
 using System.Text.Json;
 using Serializer = System.Text.Json.JsonSerializer;
 
-public class RockFile :
-    IRockFile, IRockBinary, IRockText, IRockGeneric
+public class CCFile :
+    ICCFile, ICCBinary, ICCText, ICCGeneric
 {
     const string LockSuffix = ".lck";
     const string BackupSuffix = ".bak";
@@ -62,7 +62,7 @@ public class RockFile :
 
     readonly Action<string, string?> archive;
 
-    public RockFile(string filePath, Action<string, string?>? archive = null)
+    public CCFile(string filePath, Action<string, string?>? archive = null)
     {
         Path = new FileInfo(filePath).FullName;
         LockPath = Path + LockSuffix;
@@ -76,9 +76,9 @@ public class RockFile :
         this.archive = archive ?? NoOpArchive;
     }
 
-    // public RockValue<TValue> CreateValueFile<TValue>()
+    // public CCValue<TValue> CreateValueFile<TValue>()
     // {
-    //     return new RockValue<TValue>(this);
+    //     return new CCValue<TValue>(this);
     // }
 
     public TValue ReadOrWriteValue<TValue>(Func<TValue> getInitalValue)
@@ -94,7 +94,7 @@ public class RockFile :
                 }
                 catch (Exception getValueEx)
                 {
-                    throw new RockFileGetInitialValueException(getValueEx);
+                    throw new CCFileGetInitialValueException(getValueEx);
                 }
                 WriteValue(value);
             }
@@ -114,7 +114,7 @@ public class RockFile :
             }
             catch (Exception modifyEx)
             {
-                throw new RockFileModifyException(modifyEx);
+                throw new CCFileModifyException(modifyEx);
             }
             WriteValue<TValue>(modified);
             return modified;
@@ -145,7 +145,7 @@ public class RockFile :
                 }
                 catch (Exception getValueEx)
                 {
-                    throw new RockFileGetInitialValueException(getValueEx);
+                    throw new CCFileGetInitialValueException(getValueEx);
                 }
                 WriteText(value);
             }
@@ -166,7 +166,7 @@ public class RockFile :
             }
             catch (Exception modifyEx)
             {
-                throw new RockFileModifyException(modifyEx);
+                throw new CCFileModifyException(modifyEx);
             }
             WriteText(modified);
             return modified;
@@ -198,7 +198,7 @@ public class RockFile :
                 catch (Exception getValueEx)
                 {
                     throw new
-                        RockFileGetInitialValueException(getValueEx);
+                        CCFileGetInitialValueException(getValueEx);
                 }
                 WriteBytes(value);
             }
@@ -218,7 +218,7 @@ public class RockFile :
             }
             catch (Exception modifyEx)
             {
-                throw new RockFileModifyException(modifyEx);
+                throw new CCFileModifyException(modifyEx);
             }
             WriteBytes(modified);
             return modified;
@@ -252,7 +252,7 @@ public class RockFile :
             }
             catch (Exception archiveEx)
             {
-                throw new RockFileArchiveException(archiveEx);
+                throw new CCFileArchiveException(archiveEx);
             }
         }
     }

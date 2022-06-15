@@ -11,11 +11,11 @@ public class FilePathTests
         // will be dependant on the Current directory.
 
         var filePath = "Apple";
-        var rock = new RockFile(filePath);
-        var fullName1 = new FileInfo(rock.Path).FullName;
+        var ccfile = new CCFile(filePath);
+        var fullName1 = new FileInfo(ccfile.Path).FullName;
         var cwd = Environment.CurrentDirectory;
         Environment.CurrentDirectory = tempDir;
-        var fullName2 = new FileInfo(rock.Path).FullName;
+        var fullName2 = new FileInfo(ccfile.Path).FullName;
         Environment.CurrentDirectory = cwd;
         Assert.Equal(fullName1, fullName2);
     }
@@ -28,15 +28,15 @@ public class FilePathTests
         var backupName = "Some.File.txt.bak";
         var newName = "Some.File.txt.tmp";
         var filePath = Path.Combine(dir, fileName);
-        var rock = new RockFile(filePath);
+        var ccfile = new CCFile(filePath);
 
-        Assert.Equal(dir, new FileInfo(rock.LockPath).Directory?.FullName);
-        Assert.Equal(lockName, new FileInfo(rock.LockPath).Name);
+        Assert.Equal(dir, new FileInfo(ccfile.LockPath).Directory?.FullName);
+        Assert.Equal(lockName, new FileInfo(ccfile.LockPath).Name);
 
-        Assert.Equal(dir, new FileInfo(rock.BackupPath).Directory?.FullName);
-        Assert.Equal(backupName, new FileInfo(rock.BackupPath).Name);
+        Assert.Equal(dir, new FileInfo(ccfile.BackupPath).Directory?.FullName);
+        Assert.Equal(backupName, new FileInfo(ccfile.BackupPath).Name);
 
-        Assert.Equal(dir, new FileInfo(rock.TempPath).Directory?.FullName);
-        Assert.Equal(newName, new FileInfo(rock.TempPath).Name);
+        Assert.Equal(dir, new FileInfo(ccfile.TempPath).Directory?.FullName);
+        Assert.Equal(newName, new FileInfo(ccfile.TempPath).Name);
     }
 }

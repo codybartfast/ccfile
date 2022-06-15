@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/RockFile.Console/bin/Debug/net6.0/RockFile.Console.dll",
+            "program": "${workspaceFolder}/src/CCFile.Console/bin/Debug/net6.0/CCFile.Console.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/RockFile.Console",
+            "cwd": "${workspaceFolder}/src/CCFile.Console",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

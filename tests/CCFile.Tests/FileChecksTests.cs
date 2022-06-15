@@ -2,16 +2,16 @@ namespace Fmbm.IO.Tests;
 
 public class FileChecksTests
 {
-    RockFile rock = new RockFile(
+    CCFile ccfile = new CCFile(
         Path.Combine(DirPaths.AppRoot.CheckedPath, "FileChecks.txt"));
 
     void SetFiles(
         bool lckExists, bool tmpExists, bool fileExists, bool bakExists)
     {
-        SetFile(rock.LockPath, lckExists);
-        SetFile(rock.TempPath, tmpExists);
-        SetFile(rock.Path, fileExists);
-        SetFile(rock.BackupPath, bakExists);
+        SetFile(ccfile.LockPath, lckExists);
+        SetFile(ccfile.TempPath, tmpExists);
+        SetFile(ccfile.Path, fileExists);
+        SetFile(ccfile.BackupPath, bakExists);
         void SetFile(string path, bool shouldExist)
         {
             if (shouldExist)
@@ -29,7 +29,7 @@ public class FileChecksTests
     public void FileChecks_Exceptions()
     {
         var bools = new[] { false, true };
-        var action = () => rock.CheckFiles();
+        var action = () => ccfile.CheckFiles();
 
         foreach (var lckExists in bools)
         {

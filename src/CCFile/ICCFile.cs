@@ -1,6 +1,6 @@
 namespace Fmbm.IO;
 
-public interface IRockValue<TValue>
+public interface ICCValue<TValue>
 {
     TValue ReadOrWrite(Func<TValue> getValue);
     void Modify(Func<TValue?, TValue> modify);
@@ -8,7 +8,7 @@ public interface IRockValue<TValue>
     void Write(TValue obj);
 }
 
-public interface IRockFile
+public interface ICCFile
 {
     TValue ReadOrWriteValue<TValue>(Func<TValue> getValue);
     TValue ModifyValue<TValue>(Func<TValue?, TValue> modify);
@@ -26,7 +26,7 @@ public interface IRockFile
     void WriteBytes(byte[] bytes);
 }
 
-public interface IRockGeneric
+public interface ICCGeneric
 {
     TValue ReadOrWriteValue<TValue>(Func<TValue> getValue);
     TValue ModifyValue<TValue>(Func<TValue?, TValue> modify);
@@ -34,7 +34,7 @@ public interface IRockGeneric
     void WriteValue<TValue>(TValue obj);
 }
 
-public interface IRockText
+public interface ICCText
 {
     string ReadOrWriteText(Func<string> getValue);
     string ModifyText(Func<string?, string> modify);
@@ -42,7 +42,7 @@ public interface IRockText
     void WriteText(string text);
 }
 
-public interface IRockBinary
+public interface ICCBinary
 {
     byte[] ReadOrWriteBytes(Func<Byte[]> getValue);
     byte[] ModifyBytes(Func<byte[]?, byte[]> modify);
