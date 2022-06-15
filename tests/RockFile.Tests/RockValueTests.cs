@@ -17,7 +17,7 @@ public class RockValueTests
     {
         File.Delete(rock.RockFile.LockPath);
         File.Delete(rock.RockFile.TempPath);
-        File.Delete(rock.RockFile.FilePath);
+        File.Delete(rock.RockFile.Path);
         File.Delete(rock.RockFile.BackupPath);
     }
 
@@ -60,7 +60,7 @@ public class RockValueTests
     public void ValueFile_ValueType()
     {
         ClearFiles();
-        var valRock = new RockValue<int>(rock.FilePath);
+        var valRock = new RockValue<int>(rock.Path);
         Assert.Equal(0, valRock.Read());
         valRock.Write(23);
         Assert.Equal(23, valRock.Read());
@@ -77,7 +77,7 @@ public class RockValueTests
         {
             archiveCalled = true;
         };
-        var newRock = new RockValue<Cake>(rock.FilePath, archive);
+        var newRock = new RockValue<Cake>(rock.Path, archive);
         Assert.False(archiveCalled);
         newRock.Write(new Cake());
         Assert.True(archiveCalled);
@@ -113,7 +113,7 @@ public class RockValueTests
         rock.Write(new Cake { Recipe = "Big Eyes" });
         var archiveCalled = false;
         var three = new RockValue<Cake>(
-            rock.FilePath,
+            rock.Path,
             () => new Cake { Recipe = "Referendum" },
             (_, _1) => { archiveCalled = true; });
         Assert.False(archiveCalled);
@@ -127,7 +127,7 @@ public class RockValueTests
         // rock.Write(new Cake { Recipe = "Big Eyes" });
         var archiveCalled = false;
         var three = new RockValue<Cake>(
-            rock.FilePath,
+            rock.Path,
             () => new Cake { Recipe = "Referendum" },
             (_, _1) => { archiveCalled = true; });
         Assert.True(archiveCalled);

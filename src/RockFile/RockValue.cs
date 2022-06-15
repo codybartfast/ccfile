@@ -3,7 +3,7 @@ namespace Fmbm.IO;
 public class RockValue<TValue> : IRockValue<TValue>
 {
     internal RockFile RockFile { get; }
-    public string FilePath { get; }
+    public string Path { get; }
 
     public RockValue(
         string filePath,
@@ -11,7 +11,7 @@ public class RockValue<TValue> : IRockValue<TValue>
         RockFileArchive? archive = null)
         : this(filePath, archive)
     {
-        if (!File.Exists(FilePath))
+        if (!File.Exists(Path))
         {
             TValue initialValue;
             try
@@ -29,7 +29,7 @@ public class RockValue<TValue> : IRockValue<TValue>
     public RockValue(string filePath, RockFileArchive? archive = null)
     {
         this.RockFile = new RockFile(filePath, archive);
-        this.FilePath = RockFile.FilePath;
+        this.Path = RockFile.Path;
     }
 
     // hide RockFile

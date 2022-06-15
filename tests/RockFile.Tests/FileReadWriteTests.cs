@@ -19,7 +19,7 @@ public class FileReadWriteTests
     {
         File.Delete(rock.LockPath);
         File.Delete(rock.TempPath);
-        File.Delete(rock.FilePath);
+        File.Delete(rock.Path);
         File.Delete(rock.BackupPath);
     }
 
@@ -40,7 +40,7 @@ public class FileReadWriteTests
         var text = DateTime.UtcNow.ToString("o") + "WritesToDisk";
         var bytes = encoding.GetBytes(text);
         rock.WriteBytes(bytes);
-        var diskBytes = File.ReadAllBytes(rock.FilePath);
+        var diskBytes = File.ReadAllBytes(rock.Path);
         Assert.Equal(bytes, diskBytes);
     }
 
@@ -50,7 +50,7 @@ public class FileReadWriteTests
         ClearFiles();
         var text = DateTime.UtcNow.ToString("o") + "ReadsFromDisk";
         var bytes = encoding.GetBytes(text);
-        File.WriteAllBytes(rock.FilePath, bytes);
+        File.WriteAllBytes(rock.Path, bytes);
         var rockBytes = rock.ReadBytes();
         Assert.Equal(bytes, rockBytes);
     }
@@ -60,8 +60,8 @@ public class FileReadWriteTests
     {
         ClearFiles();
         rock.WriteText("Apple Banana Cherry");
-        var diskText = File.ReadAllText(rock.FilePath);
-        File.WriteAllText(rock.FilePath,
+        var diskText = File.ReadAllText(rock.Path);
+        File.WriteAllText(rock.Path,
             diskText.Replace("Banana", "Blueberry"));
         Assert.Equal("Apple Blueberry Cherry", rock.ReadText());
     }
@@ -85,8 +85,8 @@ public class FileReadWriteTests
         ClearFiles();
         var cake = new Cake();
         rock.WriteValue<Cake>(cake);
-        var diskText = File.ReadAllText(rock.FilePath);
-        File.WriteAllText(rock.FilePath, diskText.Replace("Stir", "Mix"));
+        var diskText = File.ReadAllText(rock.Path);
+        File.WriteAllText(rock.Path, diskText.Replace("Stir", "Mix"));
         var cake2 = rock.ReadValue<Cake>()!;
         Assert.Equal(true, cake2.HasRaisins);
         Assert.Equal(6, cake2.SliceCount);
@@ -99,15 +99,15 @@ public class FileReadWriteTests
     {
         ClearFiles();
         rock.WriteText("Apple");
-        Assert.Equal("Apple", File.ReadAllText(rock.FilePath));
+        Assert.Equal("Apple", File.ReadAllText(rock.Path));
         Assert.False(File.Exists(rock.BackupPath));
 
         rock.WriteText("Banana");
-        Assert.Equal("Banana", File.ReadAllText(rock.FilePath));
+        Assert.Equal("Banana", File.ReadAllText(rock.Path));
         Assert.Equal("Apple", File.ReadAllText(rock.BackupPath));
 
         rock.WriteText("Cherry");
-        Assert.Equal("Cherry", File.ReadAllText(rock.FilePath));
+        Assert.Equal("Cherry", File.ReadAllText(rock.Path));
         Assert.Equal("Banana", File.ReadAllText(rock.BackupPath));
     }
 
@@ -158,7 +158,7 @@ public class FileReadWriteTests
         string? backupContent = null;
 
         ClearFiles();
-        var arcRock = new RockFile(this.rock.FilePath, Archive);
+        var arcRock = new RockFile(this.rock.Path, Archive);
 
         arcRock.WriteText("Apple Pie");
         Assert.Equal(fileContent, "Apple Pie");
@@ -196,8 +196,8 @@ public class FileReadWriteTests
             }
             return "America";
         };
-        var rock1 = new RockFile(rock.FilePath.ToLower());
-        var rock2 = new RockFile(rock.FilePath.ToUpper());
+        var rock1 = new RockFile(rock.Path.ToLower());
+        var rock2 = new RockFile(rock.Path.ToUpper());
         var task1 = new Task(() => rock1.ModifyText(modify));
 
         task1.Start();

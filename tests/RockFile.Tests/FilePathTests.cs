@@ -12,10 +12,10 @@ public class FilePathTests
 
         var filePath = "Apple";
         var rock = new RockFile(filePath);
-        var fullName1 = new FileInfo(rock.FilePath).FullName;
+        var fullName1 = new FileInfo(rock.Path).FullName;
         var cwd = Environment.CurrentDirectory;
         Environment.CurrentDirectory = tempDir;
-        var fullName2 = new FileInfo(rock.FilePath).FullName;
+        var fullName2 = new FileInfo(rock.Path).FullName;
         Environment.CurrentDirectory = cwd;
         Assert.Equal(fullName1, fullName2);
     }

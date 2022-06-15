@@ -57,7 +57,7 @@ public class RockFile :
 
     private readonly object fileLock;
 
-    public string FilePath { get; }
+    public string Path { get; }
     internal string LockPath { get; }
     internal string BackupPath { get; }
     internal string TempPath { get; }
@@ -66,13 +66,13 @@ public class RockFile :
 
     public RockFile(string filePath, RockFileArchive? archive = null)
     {
-        FilePath = new FileInfo(filePath).FullName;
-        LockPath = FilePath + LockSuffix;
+        Path = new FileInfo(filePath).FullName;
+        LockPath = Path + LockSuffix;
         BackupPath = filePath + BackupSuffix;
         TempPath = filePath + TempSuffix;
 
         fileLock = fileLockDict.GetOrAdd(
-            FilePath.ToUpperInvariant(),
+            Path.ToUpperInvariant(),
             _ => new Object());
 
         this.archive = archive ?? NoOpArchive;
@@ -87,7 +87,7 @@ public class RockFile :
     {
         lock (fileLock)
         {
-            if (!File.Exists(FilePath))
+            if (!File.Exists(Path))
             {
                 TValue value;
                 try
@@ -138,7 +138,7 @@ public class RockFile :
     {
         lock (fileLock)
         {
-            if (!File.Exists(FilePath))
+            if (!File.Exists(Path))
             {
                 string value;
                 try
@@ -190,7 +190,7 @@ public class RockFile :
     {
         lock (fileLock)
         {
-            if (!File.Exists(FilePath))
+            if (!File.Exists(Path))
             {
                 byte[] value;
                 try
@@ -232,7 +232,7 @@ public class RockFile :
         lock (fileLock)
         {
             CheckFiles();
-            return File.Exists(FilePath) ? File.ReadAllBytes(FilePath) : null;
+            return File.Exists(Path) ? File.ReadAllBytes(Path) : null;
         }
     }
 
@@ -241,16 +241,16 @@ public class RockFile :
         lock (fileLock)
         {
             CheckFiles();
-            var foundExisting = File.Exists(FilePath);
+            var foundExisting = File.Exists(Path);
             File.WriteAllBytes(TempPath, bytes);
             if (foundExisting)
             {
-                File.Move(FilePath, BackupPath, true);
+                File.Move(Path, BackupPath, true);
             }
-            File.Move(TempPath, FilePath);
+            File.Move(TempPath, Path);
             try
             {
-                archive(FilePath, foundExisting ? BackupPath : null);
+                archive(Path, foundExisting ? BackupPath : null);
             }
             catch (Exception archiveEx)
             {
@@ -273,10 +273,10 @@ public class RockFile :
                 throw new TempFileAlreadyExistsException(
                     $"Temporay file {TempPath} already exists.");
             }
-            if (File.Exists(BackupPath) && !File.Exists(FilePath))
+            if (File.Exists(BackupPath) && !File.Exists(Path))
             {
                 throw new BackupExistsWithoutMainException(
-                    $"Backup file exists but could not find main file {FilePath}");
+                    $"Backup file exists but could not find main file {Path}");
             }
         }
     }

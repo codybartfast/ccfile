@@ -10,7 +10,7 @@ public class FileChecksTests
     {
         SetFile(rock.LockPath, lckExists);
         SetFile(rock.TempPath, tmpExists);
-        SetFile(rock.FilePath, fileExists);
+        SetFile(rock.Path, fileExists);
         SetFile(rock.BackupPath, bakExists);
         void SetFile(string path, bool shouldExist)
         {
