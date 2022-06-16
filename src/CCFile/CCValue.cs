@@ -32,9 +32,6 @@ public class CCValue<TValue> : ICCValue<TValue>
         this.Path = CCFile.Path;
     }
 
-    // hide CCFile
-    // filepaht -> path
-
     public TValue ReadOrWrite(Func<TValue> getValue)
     {
         return CCFile.ReadOrWriteValue(getValue);

@@ -134,13 +134,4 @@ public class CCValueTests
         Assert.Equal("Referendum", three.Read()!.Recipe);
     }
 
-    // [Fact]
-    // public void ValueFile_ConstructorTakesCCFile()
-    // {
-    //     ClearFiles();
-    //     var ccFile = new CCFile(filePath);
-    //     var ccVal = new CCValue<Cake>(ccFile);
-    //     ccVal.Write(new Cake { Recipe = "Too many notes" });
-    //     Assert.Equal("Too many notes", ccFile.ReadValue<Cake>()!.Recipe);
-    // }
 }

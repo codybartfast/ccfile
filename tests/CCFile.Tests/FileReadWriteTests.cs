@@ -217,16 +217,6 @@ public class FileReadWriteTests
         Assert.Equal("America", File.ReadAllText(ccfile.BackupPath));
     }
 
-    // [Fact]
-    // public void ValueFile_IsCreated_AndMatches()
-    // {
-    //     ClearFiles();
-    //     var cake = new Cake { Recipe = "Get more cake!" };
-    //     ccfile.WriteValue(cake);
-    //     var vf = ccfile.CreateValueFile<Cake>();
-    //     Assert.Equal("Get more cake!", vf.Read()!.Recipe);
-    // }
-
     [Fact]
     public void ReadOrWriteBytes_ReturnsExisting()
     {

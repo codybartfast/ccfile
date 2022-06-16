@@ -23,7 +23,8 @@ public class CCFile :
 
     public static TValue? BytesToValue<TValue>(byte[] bytes)
     {
-        return TextToValue<TValue>(BytesToText(bytes));
+        var stream = new MemoryStream(bytes);
+        return Serializer.Deserialize<TValue>(stream);
     }
 
     public static TValue? TextToValue<TValue>(string text)
@@ -36,14 +37,16 @@ public class CCFile :
         return encoding.GetString(bytes);
     }
 
-    public static byte[] ValueToBytes<TValue>(TValue obj)
+    public static byte[] ValueToBytes<TValue>(TValue value)
     {
-        return TextToBytes(ValueToText<TValue>(obj));
+        var stream = new MemoryStream();
+        Serializer.Serialize<TValue>(stream, value);
+        return stream.ToArray();
     }
 
-    public static string ValueToText<TValue>(TValue obj)
+    public static string ValueToText<TValue>(TValue value)
     {
-        return Serializer.Serialize<TValue>(obj, serializerOptions);
+        return Serializer.Serialize<TValue>(value, serializerOptions);
     }
 
     public static byte[] TextToBytes(string text)
@@ -75,11 +78,6 @@ public class CCFile :
 
         this.archive = archive ?? NoOpArchive;
     }
-
-    // public CCValue<TValue> CreateValueFile<TValue>()
-    // {
-    //     return new CCValue<TValue>(this);
-    // }
 
     public TValue ReadOrWriteValue<TValue>(Func<TValue> getInitalValue)
     {
@@ -127,9 +125,9 @@ public class CCFile :
         return bytes is null ? default : BytesToValue<TValue>(bytes);
     }
 
-    public void WriteValue<TValue>(TValue obj)
+    public void WriteValue<TValue>(TValue value)
     {
-        WriteBytes(ValueToBytes<TValue>(obj));
+        WriteBytes(ValueToBytes<TValue>(value));
     }
 
     public string ReadOrWriteText(Func<string> getInitialValue)
