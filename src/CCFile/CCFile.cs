@@ -237,20 +237,40 @@ public class CCFile :
         lock (fileLock)
         {
             CheckFiles();
-            var foundExisting = File.Exists(Path);
-            File.WriteAllBytes(TempPath, bytes);
-            if (foundExisting)
+            CheckAccess(BackupPath);
+            CheckAccess(Path);
+
+            using (var stream = File.Open(TempPath,
+                FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+            }
+
+            var makeBackup = File.Exists(Path);
+            if (makeBackup)
             {
                 File.Move(Path, BackupPath, true);
             }
             File.Move(TempPath, Path);
             try
             {
-                archive(Path, foundExisting ? BackupPath : null);
+                archive(Path, makeBackup ? BackupPath : null);
             }
             catch (Exception archiveEx)
             {
                 throw new CCFileArchiveException(archiveEx);
+            }
+        }
+    }
+
+    private void CheckAccess(string filePahth)
+    {
+        if (File.Exists(filePahth))
+        {
+            using (File.Open(filePahth,
+                FileMode.Open, FileAccess.Read, FileShare.None))
+            {
+                // Opening file to check we have access
             }
         }
     }
