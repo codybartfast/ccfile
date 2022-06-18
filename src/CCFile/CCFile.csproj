@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <Version>1.0.0-beta.0</Version>
+    <Description>Read, write and serialize to file - simply and robustly.</Description>
+    <AssemblyName>Fmbm.CCFile</AssemblyName>
+    <AssemblyTitle>CCFile</AssemblyTitle>
+    <Authors>John Donnellan</Authors>
+    <PackageTags>Read;write;file;bytes;text;serialize;robust;FMBM</PackageTags>
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/codybartfast/ccfile</RepositoryUrl> 
+    <RepositoryType>git</RepositoryType> 
+
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

@@ -3,9 +3,12 @@
 Action<string> wl = Console.WriteLine;
 Console.WriteLine("Hello, World!");
 
-// var ccfile = new CCFile(DirPaths.AppRoot.CheckedPath +"\\AFile.txt");
-// var v = ccfile.ReadValue<int>();
-// Console.WriteLine(v);
+Environment.CurrentDirectory = DirPaths.AppRoot.CheckedPath;
 
-var path = DirPaths.AppRoot.CheckedPath +"\\AFile.txt";
-Console.WriteLine(path);
+ICCFile ccfile = new CCFile("FMBM_CCFile.txt");
+
+ccfile.WriteText("The cat sat on the mat.");
+
+Console.WriteLine(ccfile.ReadText());
+Console.WriteLine(ccfile.ReadBytes()!.Length);
+
