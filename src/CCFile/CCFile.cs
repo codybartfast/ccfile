@@ -296,4 +296,14 @@ public class CCFile :
             }
         }
     }
+
+    public void Delete()
+    {
+        lock (fileLock)
+        {
+            File.Delete(Path);
+            File.Delete(BackupPath);
+            File.Delete(TempPath);
+        }
+    }
 }

@@ -51,4 +51,8 @@ public class CCValue<TValue> : ICCValue<TValue>
     {
         CCFile.WriteBytes(CCFile.ValueToBytes<TValue>(value));
     }
+
+    public void Delete(){
+        CCFile.Delete();
+    }
 }
