@@ -312,8 +312,6 @@ The normal writing process is:
 
 The _temporary_ path is the _file_ path with the `.tmp` extension.
 
-
-
 how writes
 checks fail
 

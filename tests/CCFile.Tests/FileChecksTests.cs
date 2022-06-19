@@ -5,10 +5,8 @@ public class FileChecksTests
     CCFile ccfile = new CCFile(
         Path.Combine(DirPaths.AppRoot.CheckedPath, "FileChecks.txt"));
 
-    void SetFiles(
-        bool lckExists, bool tmpExists, bool fileExists, bool bakExists)
+    void SetFiles(bool tmpExists, bool fileExists, bool bakExists)
     {
-        SetFile(ccfile.LockPath, lckExists);
         SetFile(ccfile.TempPath, tmpExists);
         SetFile(ccfile.Path, fileExists);
         SetFile(ccfile.BackupPath, bakExists);
@@ -31,29 +29,22 @@ public class FileChecksTests
         var bools = new[] { false, true };
         var action = () => ccfile.CheckFiles();
 
-        foreach (var lckExists in bools)
+        foreach (var tmpExists in bools)
         {
-            foreach (var tmpExists in bools)
+            foreach (var fileExists in bools)
             {
-                foreach (var fileExists in bools)
+                foreach (var bakExists in bools)
                 {
-                    foreach (var bakExists in bools)
+                    SetFiles(tmpExists, fileExists, bakExists);
+                    if (tmpExists)
                     {
-                        SetFiles(lckExists, tmpExists, fileExists, bakExists);
-                        if (lckExists)
+                        Assert.Throws<TempFileAlreadyExistsException>(action);
+                    }
+                    else if (bakExists)
+                    {
+                        if (!fileExists)
                         {
-                            Assert.Throws<LockFileAlreadyExistsException>(action);
-                        }
-                        else if (tmpExists)
-                        {
-                            Assert.Throws<TempFileAlreadyExistsException>(action);
-                        }
-                        else if (bakExists)
-                        {
-                            if (!fileExists)
-                            {
-                                Assert.Throws<BackupExistsWithoutMainException>(action);
-                            }
+                            Assert.Throws<BackupExistsWithoutMainException>(action);
                         }
                     }
                 }

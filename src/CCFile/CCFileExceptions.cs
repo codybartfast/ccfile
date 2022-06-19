@@ -7,12 +7,6 @@ public abstract class CCFileException : Exception
     : base(message, innerException) { }
 }
 
-public class LockFileAlreadyExistsException : CCFileException
-{
-    public LockFileAlreadyExistsException(string message)
-        : base(message) { }
-}
-
 public class TempFileAlreadyExistsException : CCFileException
 {
     public TempFileAlreadyExistsException(string message)

@@ -24,14 +24,10 @@ public class FilePathTests
     public void FilePath_FullNames(){
         var dir = tempDir;
         var fileName = "Some.File.txt";
-        var lockName = "Some.File.txt.lck";
         var backupName = "Some.File.txt.bak";
         var newName = "Some.File.txt.tmp";
         var filePath = Path.Combine(dir, fileName);
         var ccfile = new CCFile(filePath);
-
-        Assert.Equal(dir, new FileInfo(ccfile.LockPath).Directory?.FullName);
-        Assert.Equal(lockName, new FileInfo(ccfile.LockPath).Name);
 
         Assert.Equal(dir, new FileInfo(ccfile.BackupPath).Directory?.FullName);
         Assert.Equal(backupName, new FileInfo(ccfile.BackupPath).Name);

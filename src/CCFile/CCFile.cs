@@ -8,7 +8,6 @@ using Serializer = System.Text.Json.JsonSerializer;
 
 public class CCFile : ICCFile
 {
-    const string LockSuffix = ".lck";
     const string BackupSuffix = ".bak";
     const string TempSuffix = ".tmp";
 
@@ -58,7 +57,6 @@ public class CCFile : ICCFile
     private readonly object fileLock;
 
     public string Path { get; }
-    internal string LockPath { get; }
     internal string BackupPath { get; }
     internal string TempPath { get; }
 
@@ -67,7 +65,6 @@ public class CCFile : ICCFile
     public CCFile(string filePath, Action<string, string?>? archive = null)
     {
         Path = new FileInfo(filePath).FullName;
-        LockPath = Path + LockSuffix;
         BackupPath = filePath + BackupSuffix;
         TempPath = filePath + TempSuffix;
 
@@ -279,11 +276,6 @@ public class CCFile : ICCFile
     {
         lock (fileLock)
         {
-            if (File.Exists(LockPath))
-            {
-                throw new LockFileAlreadyExistsException(
-                    $"Lock file {LockPath} already exists.");
-            }
             if (File.Exists(TempPath))
             {
                 throw new TempFileAlreadyExistsException(

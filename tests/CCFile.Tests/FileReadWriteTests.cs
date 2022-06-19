@@ -17,7 +17,6 @@ public class FileReadWriteTests
 
     void ClearFiles()
     {
-        File.Delete(ccfile.LockPath);
         File.Delete(ccfile.TempPath);
         File.Delete(ccfile.Path);
         File.Delete(ccfile.BackupPath);

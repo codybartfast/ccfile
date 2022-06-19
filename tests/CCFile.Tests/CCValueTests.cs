@@ -15,7 +15,6 @@ public class CCValueTests
 
     void ClearFiles()
     {
-        File.Delete(ccfile.CCFile.LockPath);
         File.Delete(ccfile.CCFile.TempPath);
         File.Delete(ccfile.CCFile.Path);
         File.Delete(ccfile.CCFile.BackupPath);
