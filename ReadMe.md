@@ -5,40 +5,31 @@ Read, write and serialize to file - simply and robustly.
 
 Features:
 
-* Read and write both text and bytes (similar to `File.ReadAllText` etc.)
-* Serialize objects and values in the same manner as writing text or bytes.
-* Convenience `ReadOrWrite` method for initialization (similar to
-  [`ConcurrentDictionary.GetOrAdd`][MSGetOrAdd]).
-* Automatically creates a backup of an existing file before writting.
-* Allows a separate copy of updated files to be created for archiving or
-  versioning.
-* Thread-safe, prevents concurrent access to a file (including from
-  different instances of `CCFile`).
-* Only writes to file after with all the data is available (to prevent
-  partial writes when an exception is thrown while creating the data).
-* Checks for evidence of previous incomplete writes.
-* `Modify` method ensures file is not changed by a separte process between
-  reading and then writing new data.
+* Thread-safe reads and writes (similar to `File.ReadAllText`) plus
+  serialization.
+* Convenient, thread-safe `ReadOrWrite` method for initialization (similar
+  to [`ConcurrentDictionary.GetOrAdd`][MSGetOrAdd]).
+* Thread-safe `Modify` method.
+* Automatically creates a backup of existing files.
+* Supports additional archiving or versioning of files.
+* Reduces likely hood of partial writes and detects them if they do happen.
 
-Limitations:
+Warnings:
 
 * Although intended to be robust, this is a first release and so may not be
   as reliable as hoped and may have dreadful bugs.
-* Concurrency checking is only when using CCFile.  (Although exclusive file
-  access should prevent concurrent writes.)
-* It's not the fastest way to write to file as it assembles a complete
-  `byte[]` before writing.
-* If an incomplete write is discovered then it makes no attempt to repair
-  or to choose which of any existing files should be restored.
+* It's not the fastest way to write to file and does not support append.
+
+&nbsp;
 
 For Me, By Me (FMBM)
 --------------------
 
 This was created primarily for use by the author.  It has only been tested
-in limited envirnoments.  It is intended for getting ad-hoc
-applications up and running quickly.  It probably is not suitable for
-complex, production, nor evolving projects.  (The name is inspired by the
-[Fubu][Fubu], _For Us, By Us_, project, but there is no other connection.)
+in limited envirnoments.  It is intended for getting ad-hoc  applications up
+and running quickly.  It probably is not suitable for complex, production,
+nor evolving projects.  (The name is inspired by the [Fubu][Fubu],
+ _For Us, By Us_, project, but there is no other connection.)
 
 ----------------------------------------------------------------------------
 
@@ -47,7 +38,15 @@ complex, production, nor evolving projects.  (The name is inspired by the
 Contents
 --------
 
-XXX
+[CCFile Basic Usage](#ccfile-basic-usage)  
+[CCValue Basic Usage](#ccvalue-basic-usage)  
+[ReadOrWrite](#readorwrite)  
+[Modify](#modify)  
+[Exists and Delete](#exists-and-delete)  
+[Archvie](#archive)  
+[Interfaces](#interfaces)  
+[File Checks](#files-checks)  
+[Name](#why-is-it-called-ccfile)  
 
 ----------------------------------------------------------------------------
 
@@ -59,8 +58,8 @@ CCFile Basic Usage
 `CCFile` supports `Read`, `Write`, `Modify`, and `ReadOrWrite` for each of
 `bytes[]`, `string` and 'values'.  
 
-This shows a value being written to disk and then read back as a `string`,
-as a `byte[]` and as a 'value':
+This shows a 'value' being written to disk and then read back as a `string`,
+as a `byte[]`, and as a 'value':
 
 ```C#
 using Fmbm.IO;
@@ -123,24 +122,23 @@ Console.WriteLine(ccvalue.Read().Last());
 ReadOrWrite
 -----------
 
-`ReadOrWrite` is a thread safe and convenient way to set the initial content
+`ReadOrWrite` is a thread-safe and convenient way to set the initial content
 of the file if the file does not already exist.
 
-If the file does not already exist then it will call the provided
-`getInitialValue` argument and write its result to the file and will return
-that result.  If the file already exists then `ReadOrWrite` will return the
-existing content or value.  
+If the file does not already exist then the `getInitialValue` argument is
+called and the result is written to the file.  If the file already exists
+then `ReadOrWrite` will return the existing file content.  
 
 ```C#
 using Fmbm.IO;
 
 var ccfile = new CCFile("CCFile_Sample.txt");
 
-// Assuning the file does not alread exist 'getInitialValue' will be called:
+// If file does not alread exist 'getInitialValue' will be called:
 var result1 = ccfile.ReadOrWriteText(() => "Apple");
 Console.WriteLine(result1);
 
-// 'getInitialValue' not called because file does exist now.
+// 'getInitialValue' not called because file does now exist.
 var result2 = ccfile.ReadOrWriteText(() => "Banana");
 Console.WriteLine(result2);
 
@@ -156,7 +154,7 @@ Console.WriteLine(result2);
 Modify
 ------
 
-`Modify` provides a thread safe way to change the contents of the file.
+`Modify` provides a thread-safe way to change the contents of the file.
 
 ```C#
 using Fmbm.IO;
@@ -189,7 +187,7 @@ Exists and Delete
 
 `Exists` indicates whether the file exists.
 
-`Delete` deletes the file, any backup file and any temporary file.
+`Delete` deletes the file and any backup or temporary file.
 
 ```C#
 using Fmbm.IO;
@@ -221,7 +219,7 @@ The constructors of `CCFile` and `CCValue` take an optional `archive`
 parameter.  `archive` is an Action that takes a string and a nullable
 string.
 
-`action` is called when any Write completes (including ReadOrWrite and
+`archive` is called when any write completes (including ReadOrWrite and
 Modify).  The first arguement is the path to the new or updated file.  The
 second argument is the path to the backup file, or `null` if there is no
 backup file.
@@ -284,13 +282,13 @@ ccvalue.Modify(fruit =>
 Interfaces
 ----------
 
-`CCFile` implements the inteface `ICCFile` which implements: `ICCBinary`,
+`CCFile` implements the inteface `ICCFile` which extends: `ICCBinary`,
 `ICCText` and `ICCGeneric`
 
 `CCValue` implements the interface `ICCValue`
 
- `ICCBinary`, `ICCText`, `ICCGeneric` and `ICCValue` each implements
- `Exists` has their own versions of:
+`ICCBinary`, `ICCText`, `ICCGeneric` and `ICCValue` each defines
+`Exists` and defines their own versions of:
 
 * Read
 * Write
@@ -299,14 +297,16 @@ Interfaces
 
 ----------------------------------------------------------------------------
 
+&nbsp;
+
 Files Checks
 ------------
 
-The normal writing process is:
+The normal write process is:
 
 * New data is written to the _temporary_ path.
 * The existing file is moved to the _backup_ path overwritting any existing
-  file.
+  backup.
 * The _temporary_ file is moved to the _file_ path.
 * Archive is called.
 
@@ -315,12 +315,11 @@ The _temporary_ path is the _file_ path with a `.tmp` extension appended.
 The _backup_ path is the _file_ path with a `.bak` extension appended.
 
 Before reads and writes `CCFile` checks to determine if a previous write
-might have been incomplete.  If the check fails then a `CCFileException` is
-thrown.
+might be incomplete.  If the check fails then a `CCFileException` is thrown.
 
-This table shows the write process and shows the combinations of files that
-would fail the incomplete write check and cause a `CCFileException` to be
-thrown.
+This table shows the write steps and shows the combinations of files that
+would fail the check for an incomplete write and cause a `CCFileException`
+to be thrown.
 
 ```Text
 Lower case f, b: existing file.
@@ -381,7 +380,7 @@ Why is it called 'CCFile'?
 --------------------------
 
 Because it's a carbon copying, conveniently converting, concurrency
-concious, and crash catching file wrapper.
+concious, crash catching file wrapper.
 
 [Fubu]: <https://fubumvc.github.io/>
 [MSGetOrAdd]: <https://docs.microsoft.com/en-us/dotnet/api/system.collections.concurrent.concurrentdictionary-2.getoradd?view=net-6.0#system-collections-concurrent-concurrentdictionary-2-getoradd(-0-system-func((-0-1)))>
