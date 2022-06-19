@@ -5,10 +5,17 @@ Console.WriteLine("Hello, World!");
 
 Environment.CurrentDirectory = DirPaths.AppRoot.CheckedPath;
 
-ICCFile ccfile = new CCFile("FMBM_CCFile.txt");
+var ccfile = new CCFile("CCFile_Sample.txt");
 
-ccfile.WriteText("The cat sat on the mat.");
+// Make sure the file doesn't exist
+ccfile.Delete() ;
 
-Console.WriteLine(ccfile.ReadText());
-Console.WriteLine(ccfile.ReadBytes()!.Length);
+var result1 = ccfile.ReadOrWriteText(() => "Apple");
+Console.WriteLine(result1);
 
+var result2 = ccfile.ReadOrWriteText(() => "Banana");
+Console.WriteLine(result2);
+
+// OUTPUT:
+// Apple
+// Apple

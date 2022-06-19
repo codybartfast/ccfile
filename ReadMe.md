@@ -12,8 +12,8 @@ Features:
 * Automatically creates a backup of an existing file before writting.
 * Allows a separate copy of updated files to be created for archiving or
   versioning.
-* Prevents concurrent access to a file (including from different instances
-  of `CCFile`).
+* Thread safe preventing concurrent access to a file (including from 
+  different instances of `CCFile`).
 * Only writes to file after with all the data is available (to prevent
   partial writes when an exception is thrown while creating the data).
 * Checks for evidence of previous incomplete writes.
@@ -24,10 +24,12 @@ Limitations:
 
 * Although intended to be robust, this is a first release and so may not be
   as reliable as hoped and may have dreadful bugs.
-* Concurrency checking is only when using CCFile.  (Although exclusive file 
+* Concurrency checking is only when using CCFile.  (Although exclusive file
   access should prevent concurrent writes.)
 * It's not the fastest way to write to file as it assembles a complete
   `byte[]` before writing.
+* If an incomplete write is discovered then it makes no attempt to repair
+  or to choose which of any existing files should be restored.
 
 For Me, By Me (FMBM)
 --------------------
@@ -47,19 +49,105 @@ XXX
 
 ----------------------------------------------------------------------------
 
-Basic Usage
------------
+CCFile Basic Usage
+------------------
 
-`CCFile` supports `Read`, `write`, `Modify`, and `ReadOrWrite` for each of
-`bytes[]`, `string` and 'values'.  These example just show `string`.
-Examples with 'values' are below:
+`CCFile` supports `Read`, `Write`, `Modify`, and `ReadOrWrite` for each of
+`bytes[]`, `string` and 'values'.  
+
+This shows a value being written to disk and then read back as a `string`,
+as a `byte[]` and as a 'value':
 
 ```C#
 using Fmbm.IO;
 
+// Create new CCFile
+var ccfile = new CCFile("CCFile_Sample.txt");
 
+// Serialize a list to disk
+ccfile.WriteValue(new List<string> { "Apple", "Banana", "Cherry" });
+
+// Read file contents as text
+Console.WriteLine(ccfile.ReadText());
+
+// Read file contents as bytes
+Console.WriteLine(ccfile.ReadBytes()!.Length);
+
+// Deserialize file and get last element of list
+Console.WriteLine(ccfile.ReadValue<List<string>>()!.Last());
+
+// OUTPUT:
+// ["Apple","Banana","Cherry"]
+// 27
+// Cherry
+```
+
+CCValue Basic Usage
+-------------------
+
+`CCValue` is a stongly typed version that supports `Read`, `Write`, 
+`Modify`, and `ReadOrWrite` but only for 'values'.
+
+This shows a value being written to disk and then read back as a 'value':
+
+```C#
+using Fmbm.IO;
+
+var ccvalue = new CCValue<List<string>>("CCFile_Sample.txt");
+
+// Serialize a list to disk
+ccvalue.Write(new List<string> { "Apple", "Banana", "Cherry" });
+
+// Deserialize file and get last element of list
+Console.WriteLine(ccvalue.Read()!.Last());
+
+// OUTPUT:
+// Cherry
 
 ```
+
+----------------------------------------------------------------------------
+
+ReadOrWrite
+-----------
+
+If the file already exists then `ReadOrWrite` will return the existing
+value.  If the file doesn't already exist then it will call the provided
+`getInitialValue` argument and write it's result to the file and then return
+that result.
+
+```C#
+using Fmbm.IO;
+
+var ccfile = new CCFile("CCFile_Sample.txt");
+
+// Make sure the file doesn't exist
+ccfile.Delete() ;
+
+// 'getInitialValue' will be called because file doesn't exist
+var result1 = ccfile.ReadOrWriteText(() => "Apple");
+Console.WriteLine(result1);
+
+// 'getInitialValue' not called because file does exist now.
+var result2 = ccfile.ReadOrWriteText(() => "Banana");
+Console.WriteLine(result2);
+
+// OUTPUT:
+// Apple
+// Apple
+```
+
+Concurrent calls to `ReadOrWrite` will not interleave.  At most one call
+to `ReadOrWrite` will result in a call to `getInitialValue`.  Any other
+calls will then get that value from disk.
+
+----------------------------------------------------------------------------
+
+modify
+
+----------------------------------------------------------------------------
+
+archive
 
 ----------------------------------------------------------------------------
 
@@ -68,6 +156,11 @@ intefaces
 ----------------------------------------------------------------------------
 
 deleting
+
+----------------------------------------------------------------------------
+
+deserialize as array?
+search and replace
 
 ----------------------------------------------------------------------------
 
