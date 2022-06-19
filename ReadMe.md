@@ -299,8 +299,8 @@ Interfaces
 
 ----------------------------------------------------------------------------
 
-Files, Checks and Writes
-------------------------
+Files Checks
+------------
 
 The normal writing process is:
 
@@ -310,10 +310,17 @@ The normal writing process is:
 * The _temporary_ file is moved to the _file_ path.
 * Archive is called.
 
-The _temporary_ path is the _file_ path with the `.tmp` extension.
+The _temporary_ path is the _file_ path with a `.tmp` extension appended.
 
-how writes
-checks fail
+The _backup_ path is the _file_ path with a `.bak` extension appended.
+
+Before reads and writes `CCFile` checks to determine if a previous write
+might have been incomplete.  If the check fails then a `CCFileException` is
+thrown.
+
+This table shows the write process and shows the combinations of files that
+would fail the incomplete write check and cause a `CCFileException` to be
+thrown.
 
 ```Text
 Lower case f, b: existing file.
@@ -326,7 +333,7 @@ Upper case T, F, B: updated file.
 ├──────┬──────┬──────┬─────────────────────────────────────────────────────┤
 │      │      │      │ Pass: initial state.                                │
 ├──────┼──────┼──────┼─────────────────────────────────────────────────────┤
-│  T   │      │      │ Fail: .tmp may or may no be.                        │
+│  T   │      │      │ Fail: .tmp may or may no be complete.               │
 ├──────┼──────┼──────┼─────────────────────────────────────────────────────┤
 │      │  F   │      │ Pass: expected state after first write.             │
 ├──────┴──────┴──────┴─────────────────────────────────────────────────────┤
