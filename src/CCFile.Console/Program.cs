@@ -1,25 +1,20 @@
 ﻿using Fmbm.IO;
 
 Action<string> wl = Console.WriteLine;
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Hello, World");
 
 Environment.CurrentDirectory = DirPaths.AppRoot.CheckedPath;
+new CCValue<string[]>("CCFile_Sample.txt").Delete();
 
-var ccvalue = new CCValue<string[]>("CCFile_Sample.txt");
 
-// // XXX
-ccvalue.Delete();
+var ccvalue = new CCValue<List<string>>("CCFile_Sample.txt");
 
-ccvalue.ReadOrWrite(() => new[] { "Cherry", "Banana", "Apple" });
+// Serialize a list to disk
+ccvalue.Write(new List<string> { "Apple", "Banana", "Cherry" });
 
-Console.WriteLine(String.Join(", ", ccvalue.Read()));
-
-ccvalue.Modify(fruit =>
-{
-    Array.Sort(fruit!);
-    return fruit;
-});
-
-Console.WriteLine(String.Join(", ", ccvalue.Read()));
+// Deserialize file and get last element of list
+Console.WriteLine(ccvalue.Read().Last());
 
 // OUTPUT:
+// Cherry, Banana, Apple
+// Apple, Banana, Cherry

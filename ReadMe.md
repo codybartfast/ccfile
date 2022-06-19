@@ -71,10 +71,10 @@ ccfile.WriteValue(new List<string> { "Apple", "Banana", "Cherry" });
 Console.WriteLine(ccfile.ReadText());
 
 // Read file contents as bytes
-Console.WriteLine(ccfile.ReadBytes()!.Length);
+Console.WriteLine(ccfile.ReadBytes().Length);
 
 // Deserialize file and get last element of list
-Console.WriteLine(ccfile.ReadValue<List<string>>()!.Last());
+Console.WriteLine(ccfile.ReadValue<List<string>>().Last());
 
 // OUTPUT:
 // ["Apple","Banana","Cherry"]
@@ -99,7 +99,7 @@ var ccvalue = new CCValue<List<string>>("CCFile_Sample.txt");
 ccvalue.Write(new List<string> { "Apple", "Banana", "Cherry" });
 
 // Deserialize file and get last element of list
-Console.WriteLine(ccvalue.Read()!.Last());
+Console.WriteLine(ccvalue.Read().Last());
 
 // OUTPUT:
 // Cherry
@@ -144,6 +144,26 @@ Modify
 ------
 
 `Modify` provides a thread safe way to change the contents of the file.
+
+```C#
+var ccvalue = new CCValue<string[]>("CCFile_Sample.txt");
+
+ccvalue.Write(new[] { "Cherry", "Banana", "Apple" });
+
+Console.WriteLine(String.Join(", ", ccvalue.Read()));
+
+ccvalue.Modify(fruit =>
+{
+    Array.Sort(fruit);
+    return fruit;
+});
+
+Console.WriteLine(String.Join(", ", ccvalue.Read()));
+
+// OUTPUT:
+// Cherry, Banana, Apple
+// Apple, Banana, Cherry
+```
 
 ----------------------------------------------------------------------------
 
