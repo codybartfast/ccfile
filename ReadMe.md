@@ -165,6 +165,8 @@ bang nulls
 
 ----------------------------------------------------------------------------
 
+read returns null
+
 deserialize as array?
 search and replace
 

@@ -14,6 +14,8 @@ ccvalue.ReadOrWrite(() => new[] { "Cherry", "Banana", "Apple" });
 
 Console.WriteLine(String.Join(", ", ccvalue.Read()!));
 
+File.ReadAllText("None Suche");
+
 // ccvalue.Modify(fruit =>
 // {
 //     Array.Sort(fruit!);
