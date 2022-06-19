@@ -12,7 +12,7 @@ Features:
 * Automatically creates a backup of an existing file before writting.
 * Allows a separate copy of updated files to be created for archiving or
   versioning.
-* Thread safe preventing concurrent access to a file (including from 
+* Thread-safe, prevents concurrent access to a file (including from 
   different instances of `CCFile`).
 * Only writes to file after with all the data is available (to prevent
   partial writes when an exception is thrown while creating the data).
@@ -20,7 +20,7 @@ Features:
 * `Modify` method ensures file is not changed by a separte process between
   reading and then writing new data.
 
-Limitations:
+(Some) Limitations:
 
 * Although intended to be robust, this is a first release and so may not be
   as reliable as hoped and may have dreadful bugs.
@@ -111,20 +111,21 @@ Console.WriteLine(ccvalue.Read()!.Last());
 ReadOrWrite
 -----------
 
-If the file already exists then `ReadOrWrite` will return the existing
-value.  If the file doesn't already exist then it will call the provided
-`getInitialValue` argument and write it's result to the file and then return
-that result.
+`ReadOrWrite` is a thread safe and convenient way to set the initial content
+of the file if the file does not already exist.
+
+If the file does not already exist then it will call the provided 
+`getInitialValue` argument and write its result to the file and will return
+that result.  If the file already exists then `ReadOrWrite` will return the
+existing content or value.  
 
 ```C#
 using Fmbm.IO;
 
 var ccfile = new CCFile("CCFile_Sample.txt");
 
-// Make sure the file doesn't exist
-ccfile.Delete() ;
 
-// 'getInitialValue' will be called because file doesn't exist
+// Assuning the file does not alread exist 'getInitialValue' will be called:
 var result1 = ccfile.ReadOrWriteText(() => "Apple");
 Console.WriteLine(result1);
 
@@ -137,13 +138,14 @@ Console.WriteLine(result2);
 // Apple
 ```
 
-Concurrent calls to `ReadOrWrite` will not interleave.  At most one call
-to `ReadOrWrite` will result in a call to `getInitialValue`.  Any other
-calls will then get that value from disk.
-
 ----------------------------------------------------------------------------
 
-modify
+Modify
+------
+
+`Modify` provides a thread safe way to change the contents of the file.
+
+
 
 ----------------------------------------------------------------------------
 
@@ -156,6 +158,10 @@ intefaces
 ----------------------------------------------------------------------------
 
 deleting
+
+----------------------------------------------------------------------------
+
+bang nulls
 
 ----------------------------------------------------------------------------
 
@@ -225,8 +231,8 @@ Upper case T, F, B: updated file.
 Why is it called 'CCFile'?
 --------------------------
 
-Because it's conveniently converting, concurrency concious, carbon copying,
-and crash catching.
+Because it's a carbon copying, conveniently converting, concurrency 
+concious, and crash catching file wrapper.
 
 [Fubu]: <https://fubumvc.github.io/>
-[MSGetOrAdd]: <https://docs.microsoft.com/en-us/dotnet/api/system.collections.concurrent.concurrentdictionary-2.getoradd>
+[MSGetOrAdd]: <https://docs.microsoft.com/en-us/dotnet/api/system.collections.concurrent.concurrentdictionary-2.getoradd?view=net-6.0#system-collections-concurrent-concurrentdictionary-2-getoradd(-0-system-func((-0-1)))>
