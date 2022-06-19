@@ -44,6 +44,4 @@ public class FileDeleteTests
         Assert.False(File.Exists(ccfile.BackupPath));
         Assert.False(File.Exists(ccfile.TempPath));
     }
-
-
 }

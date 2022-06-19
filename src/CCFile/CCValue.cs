@@ -52,6 +52,8 @@ public class CCValue<TValue> : ICCValue<TValue>
         CCFile.WriteBytes(CCFile.ValueToBytes<TValue>(value));
     }
 
+    public bool Exists => CCFile.Exists;
+    
     public void Delete(){
         CCFile.Delete();
     }

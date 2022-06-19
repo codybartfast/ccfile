@@ -24,7 +24,7 @@ public class CCFile :
     public static TValue? BytesToValue<TValue>(byte[] bytes)
     {
         var stream = new MemoryStream(bytes);
-        return Serializer.Deserialize<TValue>(stream);;
+        return Serializer.Deserialize<TValue>(stream); ;
     }
 
     public static TValue? TextToValue<TValue>(string text)
@@ -123,7 +123,7 @@ public class CCFile :
     {
         byte[] bytes = ReadBytes();
         var val = BytesToValue<TValue>(bytes);
-        return  val ?? throw new CCFileNullDeserializeResultException(Path);
+        return val ?? throw new CCFileNullDeserializeResultException(Path);
     }
 
     public void WriteValue<TValue>(TValue value)
@@ -264,15 +264,15 @@ public class CCFile :
         }
     }
 
-    private void CheckAccess(string filePahth)
+    public bool Exists => File.Exists(Path);
+
+    public void Delete()
     {
-        if (File.Exists(filePahth))
+        lock (fileLock)
         {
-            using (File.Open(filePahth,
-                FileMode.Open, FileAccess.Read, FileShare.None))
-            {
-                // Opening file to check we have access
-            }
+            File.Delete(Path);
+            File.Delete(BackupPath);
+            File.Delete(TempPath);
         }
     }
 
@@ -298,13 +298,15 @@ public class CCFile :
         }
     }
 
-    public void Delete()
+    private void CheckAccess(string filePahth)
     {
-        lock (fileLock)
+        if (File.Exists(filePahth))
         {
-            File.Delete(Path);
-            File.Delete(BackupPath);
-            File.Delete(TempPath);
+            using (File.Open(filePahth,
+                FileMode.Open, FileAccess.Read, FileShare.None))
+            {
+                // Opening file to check we have access
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ public interface ICCValue<TValue>
     void Modify(Func<TValue, TValue> modify);
     TValue Read();
     void Write(TValue obj);
+    bool Exists { get; }
 }
 
 public interface ICCFile
@@ -24,6 +25,8 @@ public interface ICCFile
     byte[] ModifyBytes(Func<byte[], byte[]> modify);
     byte[] ReadBytes();
     void WriteBytes(byte[] bytes);
+
+    bool Exists { get; }
 }
 
 public interface ICCGeneric
@@ -32,6 +35,7 @@ public interface ICCGeneric
     TValue ModifyValue<TValue>(Func<TValue, TValue> modify);
     TValue ReadValue<TValue>();
     void WriteValue<TValue>(TValue obj);
+    bool Exists { get; }
 }
 
 public interface ICCText
@@ -40,6 +44,7 @@ public interface ICCText
     string ModifyText(Func<string, string> modify);
     string ReadText();
     void WriteText(string text);
+    bool Exists { get; }
 }
 
 public interface ICCBinary
@@ -48,4 +53,5 @@ public interface ICCBinary
     byte[] ModifyBytes(Func<byte[], byte[]> modify);
     byte[] ReadBytes();
     void WriteBytes(byte[] bytes);
+    bool Exists { get; }
 }
