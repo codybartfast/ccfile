@@ -37,12 +37,12 @@ public class CCValue<TValue> : ICCValue<TValue>
         return CCFile.ReadOrWriteValue(getValue);
     }
 
-    public void Modify(Func<TValue?, TValue> modify)
+    public void Modify(Func<TValue, TValue> modify)
     {
         CCFile.ModifyValue<TValue>(modify);
     }
 
-    public TValue? Read()
+    public TValue Read()
     {
         return CCFile.ReadValue<TValue>();
     }

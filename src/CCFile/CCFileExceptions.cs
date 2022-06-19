@@ -48,3 +48,9 @@ public class CCFileArchiveException : CCFileException
         , archiveException)
     { }
 }
+
+public class CCFileNullDeserializeResultException : CCFileException
+{
+    public CCFileNullDeserializeResultException(string path)
+    : base($"Deserializer returned <null> for file: {path}") { }
+}

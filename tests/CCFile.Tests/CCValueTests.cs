@@ -22,10 +22,11 @@ public class CCValueTests
     }
 
     [Fact]
-    public void ReadValue_NoFile_ReturnsDefault()
+    public void ReadValue_NoFile_ThrowsNotFoundEx()
     {
         ClearFiles();
-        Assert.Null(ccfile.Read());
+        var action = () => { ccfile.Read(); };
+        Assert.Throws<FileNotFoundException>(action);
     }
 
     [Fact]
@@ -42,11 +43,10 @@ public class CCValueTests
     public void ValueFile_Modify()
     {
         ClearFiles();
-        ccfile.Modify(cake =>
-        {
-            Assert.Null(cake);
-            return new Cake();
-        });
+        var action = () => ccfile.Read();
+        Assert.Throws<FileNotFoundException>(action);
+
+        ccfile.ReadOrWrite(() => new Cake());
         ccfile.Modify(cake =>
         {
             Assert.NotNull(cake);
@@ -61,7 +61,9 @@ public class CCValueTests
     {
         ClearFiles();
         var valCC = new CCValue<int>(ccfile.Path);
-        Assert.Equal(0, valCC.Read());
+        var readAction = () => { valCC.Read(); };
+        Assert.Throws<FileNotFoundException>(readAction);
+
         valCC.Write(23);
         Assert.Equal(23, valCC.Read());
         valCC.Modify(_ => 42);

@@ -12,7 +12,7 @@ Features:
 * Automatically creates a backup of an existing file before writting.
 * Allows a separate copy of updated files to be created for archiving or
   versioning.
-* Thread-safe, prevents concurrent access to a file (including from 
+* Thread-safe, prevents concurrent access to a file (including from
   different instances of `CCFile`).
 * Only writes to file after with all the data is available (to prevent
   partial writes when an exception is thrown while creating the data).
@@ -85,7 +85,7 @@ Console.WriteLine(ccfile.ReadValue<List<string>>()!.Last());
 CCValue Basic Usage
 -------------------
 
-`CCValue` is a stongly typed version that supports `Read`, `Write`, 
+`CCValue` is a stongly typed version that supports `Read`, `Write`,
 `Modify`, and `ReadOrWrite` but only for 'values'.
 
 This shows a value being written to disk and then read back as a 'value':
@@ -114,7 +114,7 @@ ReadOrWrite
 `ReadOrWrite` is a thread safe and convenient way to set the initial content
 of the file if the file does not already exist.
 
-If the file does not already exist then it will call the provided 
+If the file does not already exist then it will call the provided
 `getInitialValue` argument and write its result to the file and will return
 that result.  If the file already exists then `ReadOrWrite` will return the
 existing content or value.  
@@ -144,8 +144,6 @@ Modify
 ------
 
 `Modify` provides a thread safe way to change the contents of the file.
-
-
 
 ----------------------------------------------------------------------------
 
@@ -233,7 +231,7 @@ Upper case T, F, B: updated file.
 Why is it called 'CCFile'?
 --------------------------
 
-Because it's a carbon copying, conveniently converting, concurrency 
+Because it's a carbon copying, conveniently converting, concurrency
 concious, and crash catching file wrapper.
 
 [Fubu]: <https://fubumvc.github.io/>

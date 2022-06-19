@@ -7,21 +7,19 @@ Environment.CurrentDirectory = DirPaths.AppRoot.CheckedPath;
 
 var ccvalue = new CCValue<string[]>("CCFile_Sample.txt");
 
-// XXX
+// // XXX
 ccvalue.Delete();
 
 ccvalue.ReadOrWrite(() => new[] { "Cherry", "Banana", "Apple" });
 
-Console.WriteLine(String.Join(", ", ccvalue.Read()!));
+Console.WriteLine(String.Join(", ", ccvalue.Read()));
 
-File.ReadAllText("None Suche");
+ccvalue.Modify(fruit =>
+{
+    Array.Sort(fruit!);
+    return fruit;
+});
 
-// ccvalue.Modify(fruit =>
-// {
-//     Array.Sort(fruit!);
-//     return fruit;
-// });
+Console.WriteLine(String.Join(", ", ccvalue.Read()));
 
 // OUTPUT:
-// Apple
-// Apple

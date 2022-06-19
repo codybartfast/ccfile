@@ -24,7 +24,7 @@ public class CCFile :
     public static TValue? BytesToValue<TValue>(byte[] bytes)
     {
         var stream = new MemoryStream(bytes);
-        return Serializer.Deserialize<TValue>(stream);
+        return Serializer.Deserialize<TValue>(stream);;
     }
 
     public static TValue? TextToValue<TValue>(string text)
@@ -100,7 +100,7 @@ public class CCFile :
         }
     }
 
-    public TValue ModifyValue<TValue>(Func<TValue?, TValue> modify)
+    public TValue ModifyValue<TValue>(Func<TValue, TValue> modify)
     {
         lock (fileLock)
         {
@@ -119,10 +119,11 @@ public class CCFile :
         }
     }
 
-    public TValue? ReadValue<TValue>()
+    public TValue ReadValue<TValue>()
     {
-        byte[]? bytes = ReadBytes();
-        return bytes is null ? default : BytesToValue<TValue>(bytes);
+        byte[] bytes = ReadBytes();
+        var val = BytesToValue<TValue>(bytes);
+        return  val ?? throw new CCFileNullDeserializeResultException(Path);
     }
 
     public void WriteValue<TValue>(TValue value)
@@ -152,12 +153,12 @@ public class CCFile :
 
     }
 
-    public string ModifyText(Func<string?, string> modify)
+    public string ModifyText(Func<string, string> modify)
     {
         lock (fileLock)
         {
             string? modified = null;
-            string? existing = ReadText();
+            string existing = ReadText();
             try
             {
                 modified = modify(existing);
@@ -171,10 +172,10 @@ public class CCFile :
         }
     }
 
-    public string? ReadText()
+    public string ReadText()
     {
-        byte[]? bytes = ReadBytes();
-        return bytes is null ? null : BytesToText(bytes);
+        byte[] bytes = ReadBytes();
+        return BytesToText(bytes);
     }
 
     public void WriteText(string text)
@@ -204,7 +205,7 @@ public class CCFile :
         }
     }
 
-    public byte[] ModifyBytes(Func<byte[]?, byte[]> modify)
+    public byte[] ModifyBytes(Func<byte[], byte[]> modify)
     {
         lock (fileLock)
         {
@@ -223,12 +224,12 @@ public class CCFile :
         }
     }
 
-    public Byte[]? ReadBytes()
+    public Byte[] ReadBytes()
     {
         lock (fileLock)
         {
             CheckFiles();
-            return File.Exists(Path) ? File.ReadAllBytes(Path) : null;
+            return File.ReadAllBytes(Path);
         }
     }
 

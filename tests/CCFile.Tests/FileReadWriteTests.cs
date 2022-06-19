@@ -27,10 +27,18 @@ public class FileReadWriteTests
     public void NoFile_ReturnsDefault()
     {
         ClearFiles();
-        Assert.Null(ccfile.ReadBytes());
-        Assert.Null(ccfile.ReadText());
-        Assert.Null(ccfile.ReadValue<Cake>());
-        Assert.Equal(0, ccfile.ReadValue<int>());
+
+        var readBytes = () => ccfile.ReadBytes();
+        Assert.Throws<FileNotFoundException>(readBytes);
+
+        var readText = () => ccfile.ReadText();
+        Assert.Throws<FileNotFoundException>(readText);
+
+        var readObj = () => ccfile.ReadValue<Cake>();
+        Assert.Throws<FileNotFoundException>(readObj);
+
+        var readVal = () => { ccfile.ReadValue<int>(); }; // XXX
+        Assert.Throws<FileNotFoundException>(readVal);
     }
 
     [Fact]
@@ -198,6 +206,8 @@ public class FileReadWriteTests
         };
         var ccfile1 = new CCFile(ccfile.Path.ToLower());
         var ccfile2 = new CCFile(ccfile.Path.ToUpper());
+        ccfile1.WriteText("Chile");
+
         var task1 = new Task(() => ccfile1.ModifyText(modify));
 
         task1.Start();
