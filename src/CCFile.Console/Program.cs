@@ -6,15 +6,17 @@ Console.WriteLine("Hello, World");
 Environment.CurrentDirectory = DirPaths.AppRoot.CheckedPath;
 new CCValue<string[]>("CCFile_Sample.txt").Delete();
 
+// Create new CCFile
+var ccfile = new CCFile("CCFile_Sample.txt");
+Console.WriteLine(ccfile.Exists);
 
-var ccvalue = new CCValue<List<string>>("CCFile_Sample.txt");
+ccfile.WriteText("");
+Console.WriteLine(ccfile.Exists);
 
-// Serialize a list to disk
-ccvalue.Write(new List<string> { "Apple", "Banana", "Cherry" });
-
-// Deserialize file and get last element of list
-Console.WriteLine(ccvalue.Read().Last());
+ccfile.Delete();
+Console.WriteLine(ccfile.Exists);
 
 // OUTPUT:
-// Cherry, Banana, Apple
-// Apple, Banana, Cherry
+// False
+// True
+// False

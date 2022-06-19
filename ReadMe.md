@@ -73,11 +73,15 @@ Console.WriteLine(ccfile.ReadText());
 // Read file contents as bytes
 Console.WriteLine(ccfile.ReadBytes().Length);
 
-// Deserialize file and get last element of list
+// Read file contents as a value
 Console.WriteLine(ccfile.ReadValue<List<string>>().Last());
 
 // OUTPUT:
-// ["Apple","Banana","Cherry"]
+// [
+//   "Apple",
+//   "Banana",
+//   "Cherry"
+// ]
 // 27
 // Cherry
 ```
@@ -146,6 +150,8 @@ Modify
 `Modify` provides a thread safe way to change the contents of the file.
 
 ```C#
+using Fmbm.IO;
+
 var ccvalue = new CCValue<string[]>("CCFile_Sample.txt");
 
 ccvalue.Write(new[] { "Cherry", "Banana", "Apple" });
@@ -167,26 +173,100 @@ Console.WriteLine(String.Join(", ", ccvalue.Read()));
 
 ----------------------------------------------------------------------------
 
-archive
+Exists and Delete
+-----------------
+
+`Exists` indicates whether the file exists.
+
+`Delete` deletes the file, any backup file and any temporary file.
+
+```C#
+using Fmbm.IO;
+
+var ccfile = new CCFile("CCFile_Sample.txt");
+Console.WriteLine(ccfile.Exists);
+
+ccfile.WriteText("");
+Console.WriteLine(ccfile.Exists);
+
+ccfile.Delete();
+Console.WriteLine(ccfile.Exists);
+
+// OUTPUT:
+// False
+// True
+// False
+
+```
+
+----------------------------------------------------------------------------
+
+Archive
+-------
+
+The constructors of `CCFile` and `CCValue` take an optional `archive`
+parameter.  `archive` is an Action that takes a string and a nullable
+string.
+
+`action` is called when any Write completes (including ReadOrWrite and
+Modify).  The first arguement is the path to the new or updated file.  The
+second argument is the path to the backup file, or `null` if there is no
+backup file.
+
+```C#
+using Fmbm.IO;
+
+void Archive(string file, string? backup)
+{
+    var after = File.ReadAllText(file);
+    var before = backup is null ? "<none>" : File.ReadAllText(backup);
+
+    Console.Write($@"
+** File Updated **
+==================
+Before: {before}
+After: {after}
+");
+}
+
+var ccvalue =
+    new CCValue<Dictionary<string, string>>("CCFile_Sample.txt", Archive);
+
+ccvalue.ReadOrWrite(() =>
+    new Dictionary<string, string> { { "A", "Apple" }, { "B", "Banana" } });
+
+ccvalue.Modify(fruit =>
+{
+    fruit.Add("C", "Cherry");
+    return fruit;
+});
+
+// OUTPUT:
+
+// ** File Updated **
+// ==================
+// Before: <none>
+// After: {
+//   "A": "Apple",
+//   "B": "Banana"
+// }
+
+// ** File Updated **
+// ==================
+// Before: {
+//   "A": "Apple",
+//   "B": "Banana"
+// }
+// After: {
+//   "A": "Apple",
+//   "B": "Banana",
+//   "C": "Cherry"
+// }
+```
 
 ----------------------------------------------------------------------------
 
 intefaces
-
-----------------------------------------------------------------------------
-
-deleting
-
-----------------------------------------------------------------------------
-
-bang nulls
-
-----------------------------------------------------------------------------
-
-read returns null
-
-deserialize as array?
-search and replace
 
 ----------------------------------------------------------------------------
 

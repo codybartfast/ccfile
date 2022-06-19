@@ -40,7 +40,7 @@ public class CCFile :
     public static byte[] ValueToBytes<TValue>(TValue value)
     {
         var stream = new MemoryStream();
-        Serializer.Serialize<TValue>(stream, value);
+        Serializer.Serialize<TValue>(stream, value, serializerOptions);
         return stream.ToArray();
     }
 
