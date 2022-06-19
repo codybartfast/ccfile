@@ -20,7 +20,7 @@ Features:
 * `Modify` method ensures file is not changed by a separte process between
   reading and then writing new data.
 
-(Some) Limitations:
+Limitations:
 
 * Although intended to be robust, this is a first release and so may not be
   as reliable as hoped and may have dreadful bugs.
@@ -42,12 +42,16 @@ complex, production, nor evolving projects.  (The name is inspired by the
 
 ----------------------------------------------------------------------------
 
+&nbsp;
+
 Contents
 --------
 
 XXX
 
 ----------------------------------------------------------------------------
+
+&nbsp;
 
 CCFile Basic Usage
 ------------------
@@ -86,6 +90,8 @@ Console.WriteLine(ccfile.ReadValue<List<string>>().Last());
 // Cherry
 ```
 
+&nbsp;
+
 CCValue Basic Usage
 -------------------
 
@@ -112,6 +118,8 @@ Console.WriteLine(ccvalue.Read().Last());
 
 ----------------------------------------------------------------------------
 
+&nbsp;
+
 ReadOrWrite
 -----------
 
@@ -128,7 +136,6 @@ using Fmbm.IO;
 
 var ccfile = new CCFile("CCFile_Sample.txt");
 
-
 // Assuning the file does not alread exist 'getInitialValue' will be called:
 var result1 = ccfile.ReadOrWriteText(() => "Apple");
 Console.WriteLine(result1);
@@ -143,6 +150,8 @@ Console.WriteLine(result2);
 ```
 
 ----------------------------------------------------------------------------
+
+&nbsp;
 
 Modify
 ------
@@ -173,6 +182,8 @@ Console.WriteLine(String.Join(", ", ccvalue.Read()));
 
 ----------------------------------------------------------------------------
 
+&nbsp;
+
 Exists and Delete
 -----------------
 
@@ -201,6 +212,8 @@ Console.WriteLine(ccfile.Exists);
 
 ----------------------------------------------------------------------------
 
+&nbsp;
+
 Archive
 -------
 
@@ -216,10 +229,10 @@ backup file.
 ```C#
 using Fmbm.IO;
 
-void Archive(string file, string? backup)
+void Archive(string filePath, string? backPath)
 {
-    var after = File.ReadAllText(file);
-    var before = backup is null ? "<none>" : File.ReadAllText(backup);
+    var after = File.ReadAllText(filePath);
+    var before = backPath is null ? "<none>" : File.ReadAllText(backPath);
 
     Console.Write($@"
 ** File Updated **
@@ -266,9 +279,40 @@ ccvalue.Modify(fruit =>
 
 ----------------------------------------------------------------------------
 
-intefaces
+&nbsp;
+
+Interfaces
+----------
+
+`CCFile` implements the inteface `ICCFile` which implements: `ICCBinary`,
+`ICCText` and `ICCGeneric`
+
+`CCValue` implements the interface `ICCValue`
+
+ `ICCBinary`, `ICCText`, `ICCGeneric` and `ICCValue` each implements
+ `Exists` has their own versions of:
+
+* Read
+* Write
+* ReadOrWrite
+* Modify
 
 ----------------------------------------------------------------------------
+
+Files, Checks and Writes
+------------------------
+
+The normal writing process is:
+
+* New data is written to the _temporary_ path.
+* The existing file is moved to the _backup_ path overwritting any existing
+  file.
+* The _temporary_ file is moved to the _file_ path.
+* Archive is called.
+
+The _temporary_ path is the _file_ path with the `.tmp` extension.
+
+
 
 how writes
 checks fail

@@ -6,8 +6,7 @@ using System.Text;
 using System.Text.Json;
 using Serializer = System.Text.Json.JsonSerializer;
 
-public class CCFile :
-    ICCFile, ICCBinary, ICCText, ICCGeneric
+public class CCFile : ICCFile
 {
     const string LockSuffix = ".lck";
     const string BackupSuffix = ".bak";
