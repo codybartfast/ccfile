@@ -14,11 +14,8 @@ Features:
 * Supports additional archiving or versioning of files.
 * Reduces likely hood of partial writes and detects them if they do happen.
 
-Warnings:
-
-* Although intended to be robust, this is a first release and so may not be
-  as reliable as hoped and may have dreadful bugs.
-* It's not the fastest way to write to file and does not support append.
+__Warning:__ _Although intended to be robust, this is a first release and so may
+not be as reliable as hoped. It may have dreadful bugs._
 
 &nbsp;
 
@@ -38,12 +35,13 @@ Contents
 
 [CCFile Basic Usage](#ccfile-basic-usage)  
 [CCValue Basic Usage](#ccvalue-basic-usage)  
+[Symbolic Links](#symbolic-links)  
 [ReadOrWrite](#readorwrite)  
 [Modify](#modify)  
 [Exists and Delete](#exists-and-delete)  
 [Archvie](#archive)  
 [Interfaces](#interfaces)  
-[File Checks](#files-checks)  
+[Files Check](#files-check)  
 [Name](#why-is-it-called-ccfile)  
 
 &nbsp;
@@ -113,6 +111,21 @@ Console.WriteLine(ccvalue.Read().Last());
 
 &nbsp;
 
+Symbolic Links
+--------------
+
+The file's FullName is used as a key for synchronizing access.  It should work
+correctly across different instances of `CCFile` that access the same file even
+if they are created with different relative paths or with different casing.
+However if a file is accessible though a symbolic link then synchronization may
+not work as expected if different instancs of `CCFile` use the symbilic
+link inconsistantly.  E.g. if `CCFile`s are instantiated with
+`/apple/banana/cherry/thefile.txt` and `/apple/sldir/thefile.txt` then access
+will not be synchronized.  The file should not be corrupted because writes
+demand exlcusive access, but file access exceptions may be thrown.
+
+&nbsp;
+
 ReadOrWrite
 -----------
 
@@ -128,11 +141,11 @@ using Fmbm.IO;
 
 var ccfile = new CCFile("CCFile_Sample.txt");
 
-// If file does not alread exist 'getInitialValue' will be called:
+// If file does not already exist 'getInitialValue' will be called:
 var result1 = ccfile.ReadOrWriteText(() => "Apple");
 Console.WriteLine(result1);
 
-// 'getInitialValue' not called because file does now exist.
+// 'getInitialValue' not called because file now exists.
 var result2 = ccfile.ReadOrWriteText(() => "Banana");
 Console.WriteLine(result2);
 
@@ -283,8 +296,8 @@ Interfaces
 
 &nbsp;
 
-Files Checks
-------------
+Files Check
+-----------
 
 The normal write process is:
 
