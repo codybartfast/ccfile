@@ -1,12 +1,10 @@
 ﻿using Fmbm.IO;
 
-Action<string> wl = Console.WriteLine;
 Console.WriteLine("Hello, World");
-
 Environment.CurrentDirectory = DirPaths.AppRoot.CheckedPath;
-new CCValue<string[]>("CCFile_Sample.txt").Delete();
+new CCFile("CCFile_Sample.txt").Delete();
 
-//////////////////////////
+// =========================================================================
 
 void Archive(string filePath, string? backPath)
 {
@@ -34,6 +32,23 @@ ccvalue.Modify(fruit =>
 });
 
 // OUTPUT:
-// False
-// True
-// False
+
+// ** File Updated **
+// ==================
+// Before: <none>
+// After: {
+//   "A": "Apple",
+//   "B": "Banana"
+// }
+
+// ** File Updated **
+// ==================
+// Before: {
+//   "A": "Apple",
+//   "B": "Banana"
+// }
+// After: {
+//   "A": "Apple",
+//   "B": "Banana",
+//   "C": "Cherry"
+// }

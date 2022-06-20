@@ -31,8 +31,6 @@ and running quickly.  It probably is not suitable for complex, production,
 nor evolving projects.  (The name is inspired by the [Fubu][Fubu],
  _For Us, By Us_, project, but there is no other connection.)
 
-----------------------------------------------------------------------------
-
 &nbsp;
 
 Contents
@@ -47,8 +45,6 @@ Contents
 [Interfaces](#interfaces)  
 [File Checks](#files-checks)  
 [Name](#why-is-it-called-ccfile)  
-
-----------------------------------------------------------------------------
 
 &nbsp;
 
@@ -115,8 +111,6 @@ Console.WriteLine(ccvalue.Read().Last());
 
 ```
 
-----------------------------------------------------------------------------
-
 &nbsp;
 
 ReadOrWrite
@@ -147,8 +141,6 @@ Console.WriteLine(result2);
 // Apple
 ```
 
-----------------------------------------------------------------------------
-
 &nbsp;
 
 Modify
@@ -178,8 +170,6 @@ Console.WriteLine(String.Join(", ", ccvalue.Read()));
 // Apple, Banana, Cherry
 ```
 
-----------------------------------------------------------------------------
-
 &nbsp;
 
 Exists and Delete
@@ -207,8 +197,6 @@ Console.WriteLine(ccfile.Exists);
 // False
 
 ```
-
-----------------------------------------------------------------------------
 
 &nbsp;
 
@@ -275,8 +263,6 @@ ccvalue.Modify(fruit =>
 // }
 ```
 
-----------------------------------------------------------------------------
-
 &nbsp;
 
 Interfaces
@@ -294,8 +280,6 @@ Interfaces
 * Write
 * ReadOrWrite
 * Modify
-
-----------------------------------------------------------------------------
 
 &nbsp;
 
