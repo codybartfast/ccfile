@@ -114,15 +114,14 @@ Console.WriteLine(ccvalue.Read().Last());
 Symbolic Links
 --------------
 
-The file's FullName is used as a key for synchronizing access.  It should work
-correctly across different instances of `CCFile` that access the same file even
-if they are created with different relative paths or with different casing.
+The file's FullName is used as the key for synchronizing access it.  This should
+work correctly across different instances of `CCFile` that access the same file
+even if they are created with different relative paths or with different casing.
 However if a file is accessible though a symbolic link then synchronization may
-not work as expected if different instancs of `CCFile` use the symbilic
+not work as expected if different instances of `CCFile` use the symbilic
 link inconsistantly.  E.g. if `CCFile`s are instantiated with
 `/apple/banana/cherry/thefile.txt` and `/apple/sldir/thefile.txt` then access
-will not be synchronized.  The file should not be corrupted because writes
-demand exlcusive access, but file access exceptions may be thrown.
+to `thefile.txt` will not be thread-safe.
 
 &nbsp;
 

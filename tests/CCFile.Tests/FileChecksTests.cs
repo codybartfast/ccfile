@@ -38,13 +38,13 @@ public class FileChecksTests
                     SetFiles(tmpExists, fileExists, bakExists);
                     if (tmpExists)
                     {
-                        Assert.Throws<TempFileAlreadyExistsException>(action);
+                        Assert.Throws<CCFileTempFileAlreadyExistsException>(action);
                     }
                     else if (bakExists)
                     {
                         if (!fileExists)
                         {
-                            Assert.Throws<BackupExistsWithoutMainException>(action);
+                            Assert.Throws<CCFileBackupExistsWithoutMainException>(action);
                         }
                     }
                 }

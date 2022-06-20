@@ -277,12 +277,12 @@ public class CCFile : ICCFile
         {
             if (File.Exists(TempPath))
             {
-                throw new TempFileAlreadyExistsException(
+                throw new CCFileTempFileAlreadyExistsException(
                     $"Temporay file {TempPath} already exists.");
             }
             if (File.Exists(BackupPath) && !File.Exists(Path))
             {
-                throw new BackupExistsWithoutMainException(
+                throw new CCFileBackupExistsWithoutMainException(
                     $"Backup file exists but could not find main file {Path}");
             }
         }
