@@ -12,7 +12,7 @@ Features:
 * Thread-safe `Modify` method.
 * Automatically creates a backup of existing files.
 * Supports additional archiving or versioning of files.
-* Reduces likely hood of partial writes and detects them if they do happen.
+* Reduces likelihood of partial writes and detects them if they do happen.
 
 __Warning:__ _Although intended to be robust, this is a first release and so may
 not be as reliable as hoped. It may have dreadful bugs._
@@ -23,7 +23,7 @@ For Me, By Me (FMBM)
 --------------------
 
 This was created primarily for use by the author.  It has only been tested
-in limited envirnoments.  It is intended for getting ad-hoc  applications up
+in limited environments.  It is intended for getting ad-hoc  applications up
 and running quickly.  It probably is not suitable for complex, production,
 nor evolving projects.  (The name is inspired by the [Fubu][Fubu],
  _For Us, By Us_, project, but there is no other connection.)
@@ -39,7 +39,7 @@ Contents
 [ReadOrWrite](#readorwrite)  
 [Modify](#modify)  
 [Exists and Delete](#exists-and-delete)  
-[Archvie](#archive)  
+[Archive](#archive)  
 [Interfaces](#interfaces)  
 [Files Check](#files-check)  
 [Name](#why-is-it-called-ccfile)  
@@ -88,7 +88,7 @@ Console.WriteLine(ccfile.ReadValue<List<string>>().Last());
 CCValue Basic Usage
 -------------------
 
-`CCValue` is a stongly typed version that supports `Read`, `Write`,
+`CCValue` is a strongly typed version that supports `Read`, `Write`,
 `Modify`, and `ReadOrWrite` but only for 'values'.
 
 This shows a value being written to disk and then read back as a 'value':
@@ -118,8 +118,8 @@ The file's FullName is used as the key for synchronizing access it.  This should
 work correctly across different instances of `CCFile` that access the same file
 even if they are created with different relative paths or with different casing.
 However if a file is accessible though a symbolic link then synchronization may
-not work as expected if different instances of `CCFile` use the symbilic
-link inconsistantly.  E.g. if `CCFile`s are instantiated with
+not work as expected if different instances of `CCFile` use the symbolic
+link inconsistently.  E.g. if `CCFile`s are instantiated with
 `/apple/banana/cherry/thefile.txt` and `/apple/sldir/thefile.txt` then access
 to `thefile.txt` will not be thread-safe.
 
@@ -220,7 +220,7 @@ parameter.  `archive` is an Action that takes a string and a nullable
 string.
 
 `archive` is called when any write completes (including ReadOrWrite and
-Modify).  The first arguement is the path to the new or updated file.  The
+Modify).  The first argument is the path to the new or updated file.  The
 second argument is the path to the backup file, or `null` if there is no
 backup file.
 
@@ -280,7 +280,7 @@ ccvalue.Modify(fruit =>
 Interfaces
 ----------
 
-`CCFile` implements the inteface `ICCFile` which extends: `ICCBinary`,
+`CCFile` implements the interface `ICCFile` which extends: `ICCBinary`,
 `ICCText` and `ICCGeneric`
 
 `CCValue` implements the interface `ICCValue`
@@ -301,7 +301,7 @@ Files Check
 The normal write process is:
 
 * New data is written to the _temporary_ path.
-* The existing file is moved to the _backup_ path overwritting any existing
+* The existing file is moved to the _backup_ path overwriting any existing
   backup.
 * The _temporary_ file is moved to the _file_ path.
 * Archive is called.
@@ -376,7 +376,7 @@ Why is it called 'CCFile'?
 --------------------------
 
 Because it's a carbon copying, conveniently converting, concurrency
-concious, crash catching file wrapper.
+conscious, crash catching file wrapper.
 
 [Fubu]: <https://fubumvc.github.io/>
 [MSGetOrAdd]: <https://docs.microsoft.com/en-us/dotnet/api/system.collections.concurrent.concurrentdictionary-2.getoradd?view=net-6.0#system-collections-concurrent-concurrentdictionary-2-getoradd(-0-system-func((-0-1)))>
