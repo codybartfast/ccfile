@@ -17,17 +17,17 @@ public class CCFile : ICCFile
         new ConcurrentDictionary<string, object>();
 
     static readonly JsonSerializerOptions serializerOptions =
-        new JsonSerializerOptions { WriteIndented = true, };
+        new JsonSerializerOptions { WriteIndented = true };
 
-    public static TValue? BytesToValue<TValue>(byte[] bytes)
+    public static TValue BytesToValue<TValue>(byte[] bytes)
     {
         var stream = new MemoryStream(bytes);
-        return Serializer.Deserialize<TValue>(stream); ;
+        return Serializer.Deserialize<TValue>(stream)!;
     }
 
-    public static TValue? TextToValue<TValue>(string text)
+    public static TValue TextToValue<TValue>(string text)
     {
-        return Serializer.Deserialize<TValue>(text);
+        return Serializer.Deserialize<TValue>(text)!;
     }
 
     public static string BytesToText(byte[] bytes)
@@ -100,7 +100,7 @@ public class CCFile : ICCFile
     {
         lock (fileLock)
         {
-            TValue? modified = default;
+            TValue modified;
             var existing = ReadValue<TValue>();
             try
             {
@@ -153,7 +153,7 @@ public class CCFile : ICCFile
     {
         lock (fileLock)
         {
-            string? modified = null;
+            string modified;
             string existing = ReadText();
             try
             {
@@ -192,12 +192,11 @@ public class CCFile : ICCFile
                 }
                 catch (Exception getValueEx)
                 {
-                    throw new
-                        CCFileGetInitialValueException(getValueEx);
+                    throw new CCFileGetInitialValueException(getValueEx);
                 }
                 WriteBytes(value);
             }
-            return ReadBytes()!;
+            return ReadBytes();
         }
     }
 
@@ -205,7 +204,7 @@ public class CCFile : ICCFile
     {
         lock (fileLock)
         {
-            byte[]? modified = null;
+            byte[] modified;
             var existing = ReadBytes();
             try
             {
@@ -296,7 +295,7 @@ public class CCFile : ICCFile
             using (File.Open(filePahth,
                 FileMode.Open, FileAccess.Read, FileShare.None))
             {
-                // Opening file to check we have access
+                // Opening file just to check that we have access.
             }
         }
     }
