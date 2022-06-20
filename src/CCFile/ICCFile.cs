@@ -3,7 +3,7 @@ namespace Fmbm.IO;
 public interface ICCValue<TValue>
 {
     TValue ReadOrWrite(Func<TValue> getValue);
-    void Modify(Func<TValue, TValue> modify);
+    TValue Modify(Func<TValue, TValue> modify);
     TValue Read();
     void Write(TValue obj);
     bool Exists { get; }

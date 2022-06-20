@@ -37,9 +37,9 @@ public class CCValue<TValue> : ICCValue<TValue>
         return CCFile.ReadOrWriteValue(getValue);
     }
 
-    public void Modify(Func<TValue, TValue> modify)
+    public TValue Modify(Func<TValue, TValue> modify)
     {
-        CCFile.ModifyValue<TValue>(modify);
+        return CCFile.ModifyValue<TValue>(modify);
     }
 
     public TValue Read()
@@ -53,8 +53,9 @@ public class CCValue<TValue> : ICCValue<TValue>
     }
 
     public bool Exists => CCFile.Exists;
-    
-    public void Delete(){
+
+    public void Delete()
+    {
         CCFile.Delete();
     }
 }
