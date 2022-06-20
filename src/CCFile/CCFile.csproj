@@ -18,4 +18,8 @@
     <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="../../ReadMe.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
 </Project>
