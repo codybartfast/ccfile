@@ -6,7 +6,7 @@
     <AssemblyName>Fmbm.CCFile</AssemblyName>
     <AssemblyTitle>CCFile</AssemblyTitle>
     <Authors>John Donnellan</Authors>
-    <PackageTags>Read;write;file;bytes;text;serialize;robust;FMBM</PackageTags>
+    <PackageTags>read;write;file;bytes;text;serialize;robust;fmbm</PackageTags>
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/codybartfast/ccfile</RepositoryUrl> 
