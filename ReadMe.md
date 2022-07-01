@@ -33,16 +33,16 @@ nor evolving projects.  (The name is inspired by the [Fubu][Fubu],
 Contents
 --------
 
-[CCFile Basic Usage](#ccfile-basic-usage)  
-[CCValue Basic Usage](#ccvalue-basic-usage)  
-[Symbolic Links](#symbolic-links)  
-[ReadOrWrite](#readorwrite)  
-[Modify](#modify)  
-[Exists and Delete](#exists-and-delete)  
-[Archive](#archive)  
-[Interfaces](#interfaces)  
-[Files Check](#files-check)  
-[Name](#why-is-it-called-ccfile)  
+* [CCFile Basic Usage](#ccfile-basic-usage)  
+* [CCValue Basic Usage](#ccvalue-basic-usage)  
+* [Symbolic Links](#symbolic-links)  
+* [ReadOrWrite](#readorwrite)  
+* [Modify](#modify)  
+* [Exists and Delete](#exists-and-delete)  
+* [Archive](#archive)  
+* [Interfaces](#interfaces)  
+* [Files Check](#files-check)  
+* [Name](#why-is-it-called-ccfile)  
 
 &nbsp;
 
@@ -55,7 +55,7 @@ CCFile Basic Usage
 This shows a 'value' being written to disk and then read back as a `string`,
 as a `byte[]`, and as a 'value':
 
-```csharp
+```C#
 using Fmbm.IO;
 
 // Create new CCFile
@@ -93,7 +93,7 @@ CCValue Basic Usage
 
 This shows a value being written to disk and then read back as a 'value':
 
-```csharp
+```C#
 using Fmbm.IO;
 
 var ccvalue = new CCValue<List<string>>("CCFile_Sample.txt");
@@ -135,7 +135,7 @@ If the file does not already exist then the `getInitialValue` argument is
 called and the result is written to the file.  If the file already exists
 then `ReadOrWrite` will return the existing file content.  
 
-```csharp
+```C#
 using Fmbm.IO;
 
 var ccfile = new CCFile("CCFile_Sample.txt");
@@ -160,7 +160,7 @@ Modify
 
 `Modify` provides a thread-safe way to change the contents of the file.
 
-```csharp
+```C#
 using Fmbm.IO;
 
 var ccvalue = new CCValue<string[]>("CCFile_Sample.txt");
@@ -191,7 +191,7 @@ Exists and Delete
 
 `Delete` deletes the file and any backup or temporary file.
 
-```csharp
+```C#
 using Fmbm.IO;
 
 var ccfile = new CCFile("CCFile_Sample.txt");
@@ -224,7 +224,7 @@ Modify).  The first argument is the path to the new or updated file.  The
 second argument is the path to the backup file, or `null` if there is no
 backup file.
 
-```csharp
+```C#
 using Fmbm.IO;
 
 void Archive(string filePath, string? backPath)
