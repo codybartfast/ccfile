@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.0-beta.2</Version>
+    <Version>1.0.1</Version>
     <Description>Read, write and serialize to file - simply and robustly.</Description>
     <AssemblyName>Fmbm.CCFile</AssemblyName>
     <AssemblyTitle>CCFile</AssemblyTitle>
