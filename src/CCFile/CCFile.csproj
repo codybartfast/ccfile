@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.1</Version>
+    <Version>1.0.2-beta.0</Version>
     <Description>Read, write and serialize to file - simply and robustly.</Description>
     <AssemblyName>Fmbm.CCFile</AssemblyName>
     <AssemblyTitle>CCFile</AssemblyTitle>
     <Authors>John Donnellan</Authors>
-    <PackageTags>read;write;file;bytes;text;serialize;robust;fmbm</PackageTags>
-    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/codybartfast/ccfile</RepositoryUrl> 
-    <RepositoryType>git</RepositoryType> 
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+    <PackageTags>read;write;file;bytes;text;serialize;robust;fmbm</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/codybartfast/ccfile</RepositoryUrl>
 
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
